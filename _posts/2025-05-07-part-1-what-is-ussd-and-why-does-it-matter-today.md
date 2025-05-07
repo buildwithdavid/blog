@@ -29,7 +29,7 @@ You respond by entering the number of your choice (e.g., 1), and the network imm
 ## Behind the Scenes: A High-Level Flow
 Imagine a farmer in PNG dialing *525# to check their Kinabank account balance. Here's how it works as shown in the diagram below
 
-![Part1 banner image.]({{ site.baseurl }}/assets/images/part-1-flow)
+![Part1 banner image.]({{ site.baseurl }}/assets/images/part-1-flow.png)
 
 ### Explanation of the Flow:
 1. **You Dial the Code:** The session begins when a user dials a USSD shortcode like *525#.
@@ -55,6 +55,7 @@ Currently, USSD powers essential services across PNG, connecting people to the d
 * 💳 **Mobile Banking & Wallets:** Send money, check bank account balances, or pay bills with codes like *131# (BSP Mobile Banking) and 525# (KinaBank USSD). Digicel’s 888# (CellMoni) offers a mobile wallet for payments.
 * 📶 **Topping Up Credit:** Top up airtime or buy data bundles with *777# or *675# (network-specific options), *120# (balance check), *121# (top-up service), *126# (please call me), *127# (request credits), and *128# (transfer credits). These codes keep users connected, especially where data plans are out of reach, showcasing USSD’s everyday value.
 * 📡 **Government Services:** Services like GAPMIS (Government Agriculture Price & Market Information Service, *16400#) let farmers check crop prices or market updates. Though underused due to low awareness, GAPMIS highlights USSD’s potential to deliver critical information—setting the stage for Part 2’s tips on better menu design.
+
 ## Untapped Potential for USSD in PNG
 Beyond current uses, USSD has immense potential to expand digital inclusion, especially in remote areas with limited connectivity. Imagine these applications:
 
@@ -62,6 +63,7 @@ Beyond current uses, USSD has immense potential to expand digital inclusion, esp
 * 🎓 **Education Access:** Deliver short quizzes, school notices, or learning tips to students and parents. A student could dial *456# to receive a daily math problem.
 * 📡 **Additional Government Services:** Enable citizens to register births, check National Identification (NID) status, or track passport applications via a USSD menu. For instance, *123# could guide users through a voter registration process.
 * 📋 **Community Surveys:** Collect real-time feedback on public projects or disaster response. A village leader could dial *999# to report flooding impacts.
+
 ## Why USSD Shines in 2025
 In PNG, slow internet rollout, high smartphone costs, and reliance on basic phones keep USSD relevant. It’s a low-cost, scalable solution that works where apps and websites can’t. However, challenges like network outages or complex menus for less literate users highlight the need for thoughtful design.
 
