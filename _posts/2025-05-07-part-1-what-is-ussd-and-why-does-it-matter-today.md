@@ -29,7 +29,7 @@ You respond by entering the number of your choice (e.g., 1), and the network imm
 ## Behind the Scenes: A High-Level Flow
 Imagine a farmer in PNG dialing *525# to check their Kinabank account balance. Here's how it works as shown in the diagram below
 
-![Part1 banner image.]({{ site.baseurl }}/assets/images/part-1-flow.png)
+![USSD flow diagram.]({{ site.baseurl }}/assets/images/part-1-flow.png)
 
 ### Explanation of the Flow:
 1. **You Dial the Code:** The session begins when a user dials a USSD shortcode like *525#.
