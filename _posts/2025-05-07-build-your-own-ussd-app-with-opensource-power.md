@@ -2,7 +2,7 @@
 title: "Build Your Own USSD App with Opensource Power"
 date: 2025-05-07
 ---
-![Intro banner image.](/assets/images/intro-post-banner.jpg)
+![Intro banner image.]({{ site.baseurl }}/assets/images/intro-post-banner.jpg)
 
 Ever wondered how those *123# menus work on your phone?
 What if you could actually build one yourself?
