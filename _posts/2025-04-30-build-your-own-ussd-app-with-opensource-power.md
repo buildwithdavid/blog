@@ -1,6 +1,6 @@
 ---
 title: "Build Your Own USSD App with Opensource Power"
-date: 2025-05-07
+date: 2025-04-30
 ---
 ![Intro banner image.]({{ site.baseurl }}/assets/images/intro-post-banner.jpg)
 

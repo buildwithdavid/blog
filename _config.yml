@@ -1,4 +1,16 @@
-theme: minima
+theme: jekyll-theme-minimal
+plugins:
+  # - jekyll-feed
+  # - jekyll-seo-tag
+  # - jekyll-sitemap
+  # - jekyll-paginate-v2
+  # - jekyll-archives
+  # - jemoji
+  # - jekyll-gist
+  # - jekyll-assets
+  # - jekyll-redirect-from
+  - jekyll-remote-theme
 title: Build With David
-author: David Sikar Jr.
-description: Blog site for Build with David post updates.
+author: David Sikar
+description: I’m a Telecommunications Engineer and Python developer with 8+ years in VAS solutions, USSD/SMS apps, and systems integration. I build smart tools with Django, explore generative Al, and am currently diving into NLP to support low-resource languages in PNG. Passionate about tech that makes a difference.
+#logo: /assets/images/bwd-logo.jpg

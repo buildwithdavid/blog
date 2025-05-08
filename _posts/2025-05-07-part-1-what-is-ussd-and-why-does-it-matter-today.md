@@ -1,4 +1,7 @@
-
+---
+title: "Part 1: What is USSD and Why does it Matter Today"
+date: 2025-05-07
+---
 ![Part1 banner image.]({{ site.baseurl }}/assets/images/part-1-banner.png)
 
 *Build Your Own USSD App with Opensource Power*
