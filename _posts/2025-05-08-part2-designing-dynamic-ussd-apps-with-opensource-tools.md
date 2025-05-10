@@ -58,8 +58,8 @@ USSD sessions can time out in as little as 180 seconds. To avoid disruptions:
 ### Short, Clear Prompts
 Most users are on small feature phone screens. Prompts must be concise:
 
-* **Good:** “Enter amount (5-20):”
-* **Bad:** “Please specify the desired top-up amount in Kina.”
+* **Good:** `Enter amount (5-20):`
+* **Bad:** `Please specify the desired top-up amount in Kina.`
 
 Fortunately, the open-source `ussd-engine` Python library simplifies session management, state handling, and error processing, letting you focus on designing great user flows.
 ## USSD Flow Basics *(recap)*
@@ -77,12 +77,14 @@ A dynamic USSD session is a conversation between the user and your app. Here’s
 6. **Repeat or End:** The process continues until the session ends or times out. If a user doesn’t respond, they’ll need to dial again.
 
 ## A Sample Dynamic USSD Flow: Booking and Managing Dental Appointments
+
 This flow demonstrates a dynamic USSD session where the app allows users to check past appointments, book new dental visits, and manage cancellations, with menus tailored to their history and real-time clinic availability.
 
-1. **User dials *123#.**
-    * App authenticates the user via the mobile number (MSISDN) and retrieves their profile from the backend.
-    * App Response:
+1. **User dials `*123#`.**
 
+    * App authenticates the user via the mobile number (MSISDN) and retrieves their profile from the backend.
+
+    * App Response:
         ```
         Welcome, John!
         1. Check Appointments
@@ -92,9 +94,10 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
         ```
 
 2. **User selects “1” (Check Appointments).**
-    * App queries the user’s past and upcoming dental appointments.
-    * App Response:
 
+    * App queries the user’s past and upcoming dental appointments.
+
+    * App Response:
         ```
         Your Dental Appointments: 
         1. Cleaning (10/03/2025, Koki Dental Clinic - Done) 
@@ -110,9 +113,10 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
         ```
 
 3. **User selects “2” (Book New Appointment) from the main menu.**
-    * App retrieves a list of appointment types and checks clinic availability in real-time.
-    * App Response:
 
+    * App retrieves a list of appointment types and checks clinic availability in real-time.
+
+    * App Response:
         ```
         Select Appointment Type: 
         1. Cleaning 
@@ -122,9 +126,10 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
         ```
 
 4. **User selects “2” (Checkup).**
-    * App queries available clinics and time slots for a checkup.
-    * App Response:
 
+    * App queries available clinics and time slots for a checkup.
+
+    * App Response:
         ```
         Available Checkup Slots: 
         1. Koki Dental Clinic (10/05/2025, 9 AM) 
@@ -137,7 +142,6 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
     * App prompts for confirmation.
 
     * App Response:
-
         ```
         Book Checkup at Koki Dental Clinic, 10/05/2025, 9 AM? 
         1. Confirm 
@@ -149,7 +153,6 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
     * App saves the appointment and sends an SMS reminder (assumed via a gateway).
 
     * App Response:
-
         ```
         Appointment confirmed! You'll get an SMS reminder. 
         1. Back to Main Menu
@@ -160,7 +163,6 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
     * App retrieves upcoming appointments.
 
     * App Response:
-
         ```
         Select Appointment to Cancel: 
         1. Checkup (15/05/2025, Gerehu Dental Clinic) 
@@ -168,7 +170,6 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
         ```
 
     * Alternative (No Upcoming Appointments):
-
         ```
         No upcoming appointments to cancel. 
         1. Book New Appointment 
@@ -180,7 +181,6 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
     * App prompts for cancellation confirmation.
 
     * App Response:
-
         ```
         Cancel Checkup on 15/05/2025 at Gerehu Dental Clinic? 
         1. Confirm 
@@ -192,7 +192,6 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
     * App updates the appointment status to “Cancelled.”
 
     * App Response:
-
         ```
         Appointment cancelled successfully! 
         1. Back to Main Menu
@@ -201,7 +200,6 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
 10. **Error Handling: Invalid Option (e.g., “5” in step 1).**
 
     * App Response:
-
         ```
         Invalid choice. Please try again: 
         1. Check Appointments 
@@ -213,7 +211,6 @@ This flow demonstrates a dynamic USSD session where the app allows users to chec
 11. **Error Handling: No User Profile Found (e.g., new MSISDN).**
 
     * App Response:
-    
         ```
         Welcome! No profile found.
         1. Register (Enter Name)
