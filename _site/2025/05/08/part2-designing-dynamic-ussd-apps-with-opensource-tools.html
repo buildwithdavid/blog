@@ -24,7 +24,7 @@
 {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"David Sikar"},"dateModified":"2025-05-08T00:00:00+12:00","datePublished":"2025-05-08T00:00:00+12:00","description":"Build Your Own USSD APP with Opensource Power","headline":"Part 2: Designing Dynamic USSD Apps with Open-Source Tools","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/05/08/part2-designing-dynamic-ussd-apps-with-opensource-tools.html"},"url":"http://localhost:4000/2025/05/08/part2-designing-dynamic-ussd-apps-with-opensource-tools.html"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=d3b4ed0a6d29d10ad4d7eecf039a5b4934312b0b">
+    <link rel="stylesheet" href="/assets/css/style.css?v=03c6d85a00c76abe260a7be91cf8758886dbd45b">
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
@@ -83,18 +83,19 @@
 <p>USSD apps fall into two categories:</p>
 
 <ol>
-  <li><strong>Static USSD Menus</strong>
- Hard-coded menus with fixed content, ideal for simple tasks like balance checks. Example:
- ```
-    <ol>
-      <li>Check Balance</li>
-      <li>Call Support
- ```</li>
-    </ol>
+  <li>
+    <p><strong>Static USSD Menus</strong>
+ Hard-coded menus with fixed content, ideal for simple tasks like balance checks. Example:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1. Check Balance 
+ 2. Call Support
+</code></pre></div>    </div>
   </li>
-  <li><strong>Dynamic USSD Menus</strong>
+  <li>
+    <p><strong>Dynamic USSD Menus</strong>
  Menus created in real-time based on user input, account data, or promotions. 
- Example: When you subscribe to Digicel RedClub, the <code class="language-plaintext highlighter-rouge">*675#</code> menu is updated dynamically to cater for your subscription and available balance</li>
+ Example: When you subscribe to Digicel RedClub, the <code class="language-plaintext highlighter-rouge">*675#</code> menu is updated dynamically to cater for your subscription and available balance</p>
+  </li>
 </ol>
 
 <p>Dynamic menus enable smarter, personalized services.</p>
@@ -132,8 +133,8 @@
 <p>Most users are on small feature phone screens. Prompts must be concise:</p>
 
 <ul>
-  <li><strong>Good:</strong> “Enter amount (5-20):”</li>
-  <li><strong>Bad:</strong> “Please specify the desired top-up amount in Kina.”</li>
+  <li><strong>Good:</strong> <code class="language-plaintext highlighter-rouge">Enter amount (5-20):</code></li>
+  <li><strong>Bad:</strong> <code class="language-plaintext highlighter-rouge">Please specify the desired top-up amount in Kina.</code></li>
 </ul>
 
 <p>Fortunately, the open-source <code class="language-plaintext highlighter-rouge">ussd-engine</code> Python library simplifies session management, state handling, and error processing, letting you focus on designing great user flows.</p>
@@ -143,92 +144,237 @@
 <ol>
   <li><strong>User Input:</strong> User dials a shortcode like <code class="language-plaintext highlighter-rouge">*123#</code>.</li>
   <li><strong>Gateway Request:</strong> The telecom’s USSD gateway sends a request to your app (via HTTP).</li>
-  <li><strong>App Sends Menu:</strong> Your app responds with a menu, e.g.,
- ```
-    <ol>
-      <li>Buy Data Bundle</li>
-      <li>Check Balance
- ```</li>
-    </ol>
+  <li>
+    <p><strong>App Sends Menu:</strong> Your app responds with a menu, e.g.,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1. Buy Data Bundle 
+ 2. Check Balance
+</code></pre></div>    </div>
   </li>
   <li><strong>User Chooses:</strong> The user selects an option, and the gateway sends their choice back.</li>
   <li><strong>App Processes Input:</strong> Your app uses logic, databases, or APIs to send the next menu.</li>
   <li><strong>Repeat or End:</strong> The process continues until the session ends or times out. If a user doesn’t respond, they’ll need to dial again.</li>
 </ol>
 
-<h2 id="a-sample-dynamic-ussd-flow-personalized-data-bundle-purchase">A Sample Dynamic USSD Flow: Personalized Data Bundle Purchase</h2>
-<p>This flow demonstrates a dynamic USSD session where the app tailors options based on the user’s balance, usage, and a time-sensitive promotion.</p>
+<h2 id="a-sample-dynamic-ussd-flow-booking-and-managing-dental-appointments">A Sample Dynamic USSD Flow: Booking and Managing Dental Appointments</h2>
+
+<p>This flow demonstrates a dynamic USSD session where the app allows users to check past appointments, book new dental visits, and manage cancellations, with menus tailored to their history and real-time clinic availability.</p>
 
 <ol>
-  <li><strong>User dials <code class="language-plaintext highlighter-rouge">*123#</code></strong>.</li>
   <li>
-    <p><strong>App checks the user’s balance and recent data usage in real-time.</strong> 
- App:</p>
+    <p><strong>User dials <code class="language-plaintext highlighter-rouge">*123#</code>.</strong></p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Welcome! Your balance: K5. Choose an option:  
- 1. Buy Data Bundle  
- 2. Check Balance  
- 3. Special Offer (Today Only!)”
-</code></pre></div>    </div>
+    <ul>
+      <li>
+        <p>App authenticates the user via the mobile number (MSISDN) and retrieves their profile from the backend.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Welcome, John!
+  1. Check Appointments
+  2. Book New Appointment
+  3. Cancel Appointment
+  4. Exit
+</code></pre></div>        </div>
+      </li>
+    </ul>
   </li>
   <li>
-    <p><strong>User selects “1” (Buy Data Bundle).</strong>
- App detects low balance (K5) and tailors bundle options:</p>
+    <p><strong>User selects “1” (Check Appointments).</strong></p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Low balance detected! Select a data bundle:  
- 1. 100MB for K3  
- 2. 50MB for K2  
- 3. Back
-</code></pre></div>    </div>
+    <ul>
+      <li>
+        <p>App queries the user’s past and upcoming dental appointments.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Your Dental Appointments: 
+  1. Cleaning (10/03/2025, Koki Dental Clinic - Done) 
+  2. Checkup (15/05/2025, Gerehu Dental Clinic - Upcoming) 
+  3. Back
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p>Alternative (No Appointments):</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  No appointments found. 
+  1. Book New Appointment 
+  2. Exit
+</code></pre></div>        </div>
+      </li>
+    </ul>
   </li>
   <li>
-    <p><strong>User selects “1” (100MB for K3).</strong>
- App:</p>
+    <p><strong>User selects “2” (Book New Appointment) from the main menu.</strong></p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Buy 100MB for K3?  
- 1. Confirm  
- 2. Cancel
-</code></pre></div>    </div>
+    <ul>
+      <li>
+        <p>App retrieves a list of appointment types and checks clinic availability in real-time.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Select Appointment Type: 
+  1. Cleaning 
+  2. Checkup 
+  3. Filling 
+  4. Back
+</code></pre></div>        </div>
+      </li>
+    </ul>
   </li>
   <li>
-    <p><strong>User selects “1” (Confirm).</strong> 
- App processes payment and responds:</p>
+    <p><strong>User selects “2” (Checkup).</strong></p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Success! 100MB added. New balance: K2.
-</code></pre></div>    </div>
+    <ul>
+      <li>
+        <p>App queries available clinics and time slots for a checkup.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Available Checkup Slots: 
+  1. Koki Dental Clinic (10/05/2025, 9 AM) 
+  2. Gerehu Dental Clinic (12/05/2025, 2 PM) 
+  3. Back
+</code></pre></div>        </div>
+      </li>
+    </ul>
   </li>
   <li>
-    <p><strong>Alternative Path: If user selects “3” (Special Offer) in step 2.</strong>
- App checks the current date for a time-limited promotion:</p>
+    <p><strong>User selects “1” (Koki Dental Clinic, 10/05/2025, 9 AM).</strong></p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Today’s Offer: 500MB for K10 (50% bonus data)!  
- 1. Buy Now (requires K10 balance)  
- 2. Back”
-</code></pre></div>    </div>
-    <p>If user selects “1” but has insufficient balance (K5 &lt; K10):</p>
+    <ul>
+      <li>
+        <p>App prompts for confirmation.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Insufficient balance (K5). Top up and try again.  
- 1. Back”
-</code></pre></div>    </div>
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Book Checkup at Koki Dental Clinic, 10/05/2025, 9 AM? 
+  1. Confirm 
+  2. Cancel
+</code></pre></div>        </div>
+      </li>
+    </ul>
   </li>
   <li>
-    <p><strong>Error Handling: If user enters an invalid option (e.g., “4” in step 2):</strong> 
- App:</p>
+    <p><strong>User selects “1” (Confirm).</strong></p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Invalid choice. Please try again:  
- 1. Buy Data Bundle  
- 2. Check Balance  
- 3. Special Offer (Today Only!)
-</code></pre></div>    </div>
+    <ul>
+      <li>
+        <p>App saves the appointment and sends an SMS reminder (assumed via a gateway).</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Appointment confirmed! You'll get an SMS reminder. 
+  1. Back to Main Menu
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Alternative Path: User selects “3” (Cancel Appointment) from the main menu.</strong></p>
+
+    <ul>
+      <li>
+        <p>App retrieves upcoming appointments.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Select Appointment to Cancel: 
+  1. Checkup (15/05/2025, Gerehu Dental Clinic) 
+  2. Back
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p>Alternative (No Upcoming Appointments):</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  No upcoming appointments to cancel. 
+  1. Book New Appointment 
+  2. Exit
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “1” (Checkup, 15/05/2025).</strong></p>
+
+    <ul>
+      <li>
+        <p>App prompts for cancellation confirmation.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Cancel Checkup on 15/05/2025 at Gerehu Dental Clinic? 
+  1. Confirm 
+  2. Back
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “1” (Confirm).</strong></p>
+
+    <ul>
+      <li>
+        <p>App updates the appointment status to “Cancelled.”</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Appointment cancelled successfully! 
+  1. Back to Main Menu
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Error Handling: Invalid Option (e.g., “5” in step 1).</strong></p>
+
+    <ul>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Invalid choice. Please try again: 
+  1. Check Appointments 
+  2. Book New Appointment 
+  3. Cancel Appointment 
+  4. Exit
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Error Handling: No User Profile Found (e.g., new MSISDN).</strong></p>
+
+    <ul>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Welcome! No profile found.
+  1. Register (Enter Name)
+  2. Exit
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p>If user selects “1”, they’re prompted to enter their name, and a new profile is created.</p>
+      </li>
+    </ul>
   </li>
 </ol>
 
 <h2 id="closing-thoughts">Closing Thoughts</h2>
-<p>Dynamic USSD flows are essential for delivering fast, relevant, and user-friendly mobile services, especially in markets like Papua New Guinea. With open-source tools like <code class="language-plaintext highlighter-rouge">ussd-engine</code>, you can build modern USSD apps with confidence.</p>
+<p>Dynamic USSD flows are essential for delivering fast, relevant, and user-friendly mobile services, especially in markets like Papua New Guinea. By understanding the fundamentals, you’re well on your way to creating impactful solutions.</p>
 
-<p>In <strong>Part 3</strong>, we’ll set up <code class="language-plaintext highlighter-rouge">ussd-engine</code> and create your first USSD menu. Stay tuned!</p>
+<p>In Part 3, we’ll roll up our sleeves and dive into the open-source tech stack—using Python, Django, and the ussd-engine library by Francis Mwangi (@mwaaas), alongside Postgres for data management, Ubuntu for our coding environment, VS Code as our IDE, and tools like Postman or cURL to test API requests. We’ll set up the environment and prepare to build your first USSD menu, bringing these concepts to life. Stay tuned!</p>
 
-<p>Have you used USSD services in PNG or elsewhere? Share your thoughts or questions below!
+<p>Have you used USSD services in PNG or elsewhere? What mobile solutions would you like to build with these tools? Share your thoughts or questions below, and get ready for Part 3 by installing Python and VS Code if you’d like to follow along!
 #USSD #DigitalInclusion #PapuaNewGuinea #OpenSource</p>
 
 
