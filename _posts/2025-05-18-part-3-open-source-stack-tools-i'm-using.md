@@ -132,8 +132,8 @@ SQLite is included with Python for testing, while PostgreSQL is recommended for 
             Verify with
             `sudo -u postgres psql -c "SELECT version();”` (expect a version string).
     2.  Connection details will be covered next time.
-        Use `direnv` to set your database password: Add export `DB_PASSWORD=yourpassword` to `.envrc` and run `direnv allow .` .4
-        
+        Use `direnv` to set your database password: Add export `DB_PASSWORD=yourpassword` to `.envrc` and run `direnv allow .` .
+
 ## Extra Helpers (Optional)
 Consider Ngrok from ngrok.com to test api calls.
 
