@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Part 3: Opensource Stack - Tools I’m Using | Build With David</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Part 3: Opensource Stack - Tools I’m Using" />
+<meta name="author" content="David Sikar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Build Your Own USSD APP with Opensource Power" />
+<meta property="og:description" content="Build Your Own USSD APP with Opensource Power" />
+<link rel="canonical" href="http://localhost:4000/2025/05/18/part-3-open-source-stack-tools-i'm-using.html" />
+<meta property="og:url" content="http://localhost:4000/2025/05/18/part-3-open-source-stack-tools-i'm-using.html" />
+<meta property="og:site_name" content="Build With David" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-05-18T00:00:00+12:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Part 3: Opensource Stack - Tools I’m Using" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"David Sikar"},"dateModified":"2025-05-18T00:00:00+12:00","datePublished":"2025-05-18T00:00:00+12:00","description":"Build Your Own USSD APP with Opensource Power","headline":"Part 3: Opensource Stack - Tools I’m Using","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/05/18/part-3-open-source-stack-tools-i'm-using.html"},"url":"http://localhost:4000/2025/05/18/part-3-open-source-stack-tools-i'm-using.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=03c6d85a00c76abe260a7be91cf8758886dbd45b">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Build With David</a></h1>
+
+        
+
+        <p>I’m a Telecommunications Engineer and Python developer with 8+ years in VAS solutions, USSD/SMS apps, and systems integration. I build smart tools with Django, explore generative Al, and am currently diving into NLP to support low-resource languages in PNG. Passionate about tech that makes a difference.</p>
+
+        
+        <p class="view"><a href="https://github.com/buildwithdavid/blog">View the Project on GitHub <small>buildwithdavid/blog</small></a></p>
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small>18 May 2025</small>
+<h1>Part 3: Opensource Stack - Tools I'm Using</h1>
+
+<p class="view">by David Sikar</p>
+
+<p><img src="/assets/images/part-3-banner.png" alt="Part3 banner image." />
+<em>Build Your Own USSD APP with Opensource Power</em></p>
+
+<p>Welcome to Part 3 of our <em>Build Your Own USSD App</em> series! In Part 2, we explored a dental appointment app designed for Papua New Guinea’s mobile users, enabling bookings on basic phones without internet. Now, we’re ready to set up the free, open-source tools that make this possible—no large budget required. This is ideal for individuals or small teams in PNG looking to address local challenges like healthcare access through mobile technology.</p>
+
+<p>Imagine helping someone in Gaire village book a dental visit to UPNG Dental School Clinic with a simple USSD code. That’s the goal, and we’ll use customizable tools, including a few tailored adjustments, to get there. Let’s walk through the installation process step by step.</p>
+
+<h2 id="why-choose-free-open-source-tools">Why Choose Free, Open-Source Tools?</h2>
+<p>Open-source tools offer significant advantages:</p>
+
+<ul>
+  <li><strong>No Cost</strong>: Free to use, perfect for budget-conscious projects in PNG.</li>
+  <li><strong>Customizable</strong>: You can modify the code to suit your needs.</li>
+  <li><strong>Community Support</strong>: A global network is available to assist with issues.</li>
+  <li><strong>Sustainable</strong>: Built for long-term use in community-driven initiatives.
+Let’s set up the essential tools to start your project.</li>
+</ul>
+
+<h2 id="your-toolbox--installation-steps">Your Toolbox – Installation Steps</h2>
+<p>Here’s how to install the core components—Python, a virtual environment with virtualenv, environment variable management with direnv, a modified ussd_engine with Redis for session management, a custom ussd-simulator, and a data keeper (PostgreSQL or SQLite). We’ll cover steps for both Windows and Linux (Ubuntu, your preferred system).</p>
+
+<h2 id="python--the-foundation-of-your-app">Python – The Foundation of Your App</h2>
+<p>Python is a beginner-friendly language that forms the base of our USSD app. Here’s how to install it:</p>
+
+<ul>
+  <li><strong>For Windows</strong>:
+    <ol>
+      <li>Visit python.org and download the latest version (e.g., 3.12).</li>
+      <li>Run the installer, ensure “Add Python to PATH” is checked, and click Next.</li>
+      <li>Open Command Prompt (search “cmd” in the Start menu), type <code class="language-plaintext highlighter-rouge">python --version</code>, and press Enter. You should see something like “Python 3.12.3.” If not, verify the PATH setting.</li>
+    </ol>
+  </li>
+  <li><strong>For Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Open your terminal (Ctrl+Alt+T).</li>
+      <li>Update your system: <code class="language-plaintext highlighter-rouge">sudo apt update &amp;&amp; sudo apt upgrade -y</code>.</li>
+      <li>Install Python and pip: <code class="language-plaintext highlighter-rouge">sudo apt install python3 python3-pip -y</code>.</li>
+      <li>Verify the installation: Type <code class="language-plaintext highlighter-rouge">python3 --version</code> (e.g., “Python 3.12.3”) and <code class="language-plaintext highlighter-rouge">pip3 --version</code>. If it fails, check your internet connection.</li>
+    </ol>
+  </li>
+</ul>
+
+<p>Python’s simplicity shines here:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">say_hello</span><span class="p">(</span><span class="n">name</span><span class="p">):</span> 
+    <span class="k">return</span> <span class="sa">f</span><span class="s">"Welcome, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">!"</span>
+<span class="k">print</span><span class="p">(</span><span class="n">say_hello</span><span class="p">(</span><span class="s">"John"</span><span class="p">))</span> <span class="c1"># Output: Welcome, John!
+</span></code></pre></div></div>
+<h2 id="virtualenv--creating-a-clean-workspace">virtualenv – Creating a Clean Workspace</h2>
+<p>Using <code class="language-plaintext highlighter-rouge">virtualenv</code> sets up an isolated environment for your project, preventing conflicts with other software. Think of it as a dedicated workspace for your app.</p>
+
+<ul>
+  <li><strong>For Both Windows and Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Install virtualenv: pip3 install virtualenv (or pip on Windows).</li>
+      <li>Create a project folder: mkdir ussd_dental_app &amp;&amp; cd ussd_dental_app.</li>
+      <li>Set up the virtual environment: virtualenv venv.</li>
+      <li>Activate it:
+        <ul>
+          <li>Windows:
+  <code class="language-plaintext highlighter-rouge">venv\Scripts\activate</code> (you’ll see (venv) in your prompt).</li>
+          <li>Ubuntu: 
+  <code class="language-plaintext highlighter-rouge">source venv/bin/activate</code> (look for (venv)).</li>
+        </ul>
+      </li>
+      <li>Deactivate later with: <code class="language-plaintext highlighter-rouge">deactivate</code> (keep it active for now).
+All installations will now stay within this environment.</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="direnv--managing-environment-variables">direnv – Managing Environment Variables</h2>
+<p><code class="language-plaintext highlighter-rouge">direnv</code> automates the loading of environment variables (e.g., database passwords or Redis settings), making your setup more secure and efficient.</p>
+
+<ul>
+  <li><strong>For Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Install direnv: <code class="language-plaintext highlighter-rouge">sudo apt install direnv -y</code>.</li>
+      <li>Add it to your shell: Edit <code class="language-plaintext highlighter-rouge">~/.bashrc</code> with <code class="language-plaintext highlighter-rouge">nano ~/.bashrc</code>, add <code class="language-plaintext highlighter-rouge">eval "$(direnv hook bash)"</code> at the end, save, and exit.</li>
+      <li>Reload your shell: <code class="language-plaintext highlighter-rouge">source ~/.bashrc</code>.</li>
+      <li>In your project folder (ussd_dental_app), create a .envrc file: <code class="language-plaintext highlighter-rouge">echo "export MY_APP_ENV=development" &gt; .envrc</code>.
+  If you are using the starter project templated, navigate to the root folder of the starter project (<code class="language-plaintext highlighter-rouge">ussd_app</code>) and execute the above command</li>
+      <li>Allow it: <code class="language-plaintext highlighter-rouge">direnv allow .</code>. Variables will load automatically when you cd into the folder.</li>
+    </ol>
+  </li>
+  <li><strong>For Windows</strong>:
+<code class="language-plaintext highlighter-rouge">direnv</code> is less straightforward on Windows. For now, set variables manually in Command Prompt with <code class="language-plaintext highlighter-rouge">set MY_APP_ENV=development</code> (or use PowerShell). If you use WSL, follow the Ubuntu steps for a smoother experience.</li>
+</ul>
+
+<h2 id="redis--session-management-for-ussd_engine">Redis – Session Management for ussd_engine</h2>
+<p>Redis is a fast, in-memory database we’ll use for managing USSD session data with ussd_engine, ensuring quick access to user interactions. Install it:</p>
+
+<ul>
+  <li><strong>For Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Install Redis: <code class="language-plaintext highlighter-rouge">sudo apt install redis-server -y</code>.</li>
+      <li>Start the Redis server: <code class="language-plaintext highlighter-rouge">sudo systemctl enable redis</code> and <code class="language-plaintext highlighter-rouge">sudo systemctl start redis</code>.</li>
+      <li>Verify it’s running: <code class="language-plaintext highlighter-rouge">redis-cli ping</code>. You should see “PONG.”</li>
+      <li>Add the Redis connection details to your <code class="language-plaintext highlighter-rouge">.envrc</code>: <code class="language-plaintext highlighter-rouge">echo "export REDIS_URL=redis://localhost:6379/0" &gt;&gt; .envrc</code> and run <code class="language-plaintext highlighter-rouge">direnv allow .</code> .</li>
+    </ol>
+  </li>
+  <li><strong>For Windows:</strong>
+Redis doesn’t have an official Windows build, but you can use WSL or a precompiled binary:
+    <ol>
+      <li>Download a Redis binary for Windows (e.g., from github.com/microsoftarchive/redis).</li>
+      <li>Extract and run <code class="language-plaintext highlighter-rouge">redis-server.exe</code>.</li>
+      <li>Verify: Open another Command Prompt, run <code class="language-plaintext highlighter-rouge">redis-cli.exe ping</code>, and expect “PONG.”</li>
+      <li>Set the variable manually: set <code class="language-plaintext highlighter-rouge">alcoolREDIS_URL=redis://localhost:6379/0</code>. If using WSL, follow the Ubuntu steps.</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="ussd_engine--a-customized-ussd-engine">ussd_engine – A Customized USSD Engine</h2>
+<p>This tool, originally by Francis Mwangi (thank you!), drives our USSD flow and uses Redis for session management. I forked his ussd_engine repository and adjusted it for Python 3 compatibility. Install my version:</p>
+
+<ol>
+  <li>With your virtual environment active, run:
+<code class="language-plaintext highlighter-rouge">pip install git+https://github.com/jayskar/ussd_engine.git</code> .</li>
+  <li>Install the Redis Python client:
+pip install redis.</li>
+  <li>Verify: <code class="language-plaintext highlighter-rouge">pip list | grep ussd</code>. You should see the following.
+<code class="language-plaintext highlighter-rouge">ussd_airflow_engine 0.3.4.dev8+g0263868</code></li>
+</ol>
+
+<p>Here’s a sample menu:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">authenticated_menu</span><span class="pi">:</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">menu_screen</span>
+  <span class="na">text</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">Welcome.</span>
+  <span class="na">options</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Check Appointments</span>
+      <span class="na">next_screen</span><span class="pi">:</span> <span class="s">check_appointments</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Book New Appointment</span>
+      <span class="na">next_screen</span><span class="pi">:</span> <span class="s">book_appointment</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Cancel Appointment</span>
+      <span class="na">next_screen</span><span class="pi">:</span> <span class="s">cancel_appointment</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Exit</span>
+      <span class="na">next_screen</span><span class="pi">:</span> <span class="s">end</span>
+</code></pre></div></div>
+<h2 id="ussd-simulator--a-tailored-testing-tool">ussd-simulator – A Tailored Testing Tool</h2>
+<p>We’re using a simulator from Anthony-cloud-1’s repository (github.com/Anthony-cloud-1/ussd-simulator). I forked and adjusted it to fit our django app’s needs. Set it up:</p>
+
+<ol>
+  <li>Clone my fork:
+<code class="language-plaintext highlighter-rouge">git clone https://github.com/jayskar/ussd-simulator.git</code> (use my GitHub handle).</li>
+  <li>Navigate:
+<code class="language-plaintext highlighter-rouge">cd ussd-simulator/ussd-mock</code>.</li>
+  <li>Install dependencies:
+<code class="language-plaintext highlighter-rouge">npm install</code>.</li>
+  <li>Run it with <code class="language-plaintext highlighter-rouge">npm run serve</code> (details in Part 4). This lets you simulate USSD calls like *123#.</li>
+</ol>
+
+<h2 id="postgresql-or-sqlite--your-data-storage">PostgreSQL (or SQLite) – Your Data Storage</h2>
+<p>SQLite is included with Python for testing, while PostgreSQL is recommended for production. Install it:</p>
+
+<ul>
+  <li><strong>For Both Windows and Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Download from postgresql.org.
+        <ul>
+          <li><strong>Windows</strong>: Run the installer, set a password, and note port 5432.</li>
+          <li><strong>Ubuntu</strong>:
+  <code class="language-plaintext highlighter-rouge">sudo apt install postgresql postgresql-contrib -y</code>, then
+  <code class="language-plaintext highlighter-rouge">sudo service postgresql start</code>.
+  Verify with
+  <code class="language-plaintext highlighter-rouge">sudo -u postgres psql -c "SELECT version();”</code> (expect a version string).</li>
+        </ul>
+      </li>
+      <li>Connection details will be covered next time.
+Use <code class="language-plaintext highlighter-rouge">direnv</code> to set your database password: Add export <code class="language-plaintext highlighter-rouge">DB_PASSWORD=yourpassword</code> to <code class="language-plaintext highlighter-rouge">.envrc</code> and run <code class="language-plaintext highlighter-rouge">direnv allow .</code> .4</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="extra-helpers-optional">Extra Helpers (Optional)</h2>
+<p>Consider Ngrok from ngrok.com to test api calls.</p>
+
+<h2 id="the-blunt-truth-watch-out-for-snags">The Blunt Truth: Watch Out for Snags</h2>
+<p>Installation can be tricky—miss “Add to PATH” on Windows, forget sudo on Ubuntu, or misconfigure direnv, and you’ll hit roadblocks. If Redis doesn’t start, check your port (6379) isn’t blocked. If my fork URLs fail, check my GitHub handle in the comments—I might need to update access. I’ve skipped Django setup (it’s too much here); look for my next article with Cookiecutter. Let’s keep it straightforward for now.</p>
+
+<h2 id="whats-coming-next-building-the-app">What’s Coming Next? Building the App</h2>
+<p>Part 4 will guide you to build and test the dental app flow using this setup and our custom simulator. Catch up on Part 1 &amp; Part 2 if you missed them. Tried this yet? Share your successes or challenges below—I’m here to assist!</p>
+
+<p>#USSD #DigitalInclusion #PapuaNewGuinea #OpenSource #MobileTech #TechForGood</p>
+
+
+
+  <small>tags: <em></em></small>
+
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="https://github.com/buildwithdavid">buildwithdavid</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+  </body>
+</html>
