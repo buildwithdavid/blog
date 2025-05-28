@@ -1,0 +1,1220 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-28T12:43:19+12:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Build With David</title><subtitle>I’m a Telecommunications Engineer and Python developer with 8+ years in VAS solutions, USSD/SMS apps, and systems integration. I build smart tools with Django, explore generative Al, and am currently diving into NLP to support low-resource languages in PNG. Passionate about tech that makes a difference.</subtitle><author><name>David Sikar</name></author><entry><title type="html">Part 4: Setting Up the Django Application</title><link href="http://localhost:4000/2025/05/28/part-4-setting-up-the-django-application.html" rel="alternate" type="text/html" title="Part 4: Setting Up the Django Application" /><published>2025-05-28T00:00:00+12:00</published><updated>2025-05-28T00:00:00+12:00</updated><id>http://localhost:4000/2025/05/28/part-4-setting-up-the-django-application</id><content type="html" xml:base="http://localhost:4000/2025/05/28/part-4-setting-up-the-django-application.html"><![CDATA[<p><img src="/assets/images/part-4-banner-v1.png" alt="Part4 banner image." />
+<em>Build Your Own USSD APP with Opensource Power</em></p>
+
+<p>Welcome to <strong>Part 4</strong> of our Build Your Own USSD App Series! If you’re new, Parts 1-3 covered the theory behind USSD applications, and now we’re diving into the fun stuff: coding our Dental Appointment USSD app. This guide is ideal for developers with basic Python knowledge. In Part 3, I skipped mentioning Django to focus on architecture, but today I’ll introduce this powerful framework before we start coding. Let’s bring our app to life!
+A Quick Intro to Django
+Django is a high-level Python web framework that simplifies rapid development with features like an admin panel and ORM (Object-Relational Mapping). It’s perfect for USSD apps due to its scalability and security. Learn more at Django’s official docs.</p>
+<h3 id="lets-dive-in-coding-our-ussd-app">Let’s Dive In: Coding Our USSD App</h3>
+<p>I’m using Ubuntu for this tutorial and will provide Ubuntu commands. Where commands differ for Windows, I’ll note them explicitly. We’ll break this into three sections:</p>
+
+<ol>
+  <li>Preparing the Django Application</li>
+  <li>Creating the USSD Journey File, Models, API View, URLs, and Utility Functions</li>
+  <li>Simulating the USSD Service</li>
+</ol>
+
+<h2 id="1-preparing-django-application">1. Preparing Django Application</h2>
+<p>Let’s set up our Django environment to ensure everything runs smoothly.</p>
+
+<ol>
+  <li>
+    <p><strong>Download the Starter Project</strong></p>
+
+    <p>Start by downloading the starter project from my GitHub: https://github.com/jayskar/dental_ussd.</p>
+
+    <ul>
+      <li><strong>Option A (With Git)</strong>: If you have Git installed (download from git-scm.com if needed), clone the repository:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  git clone https://github.com/jayskar/dental_ussd.git
+</code></pre></div>        </div>
+
+        <p><img src="/assets/images/p4-im01.png" alt="Part4  image 1." /></p>
+      </li>
+      <li><strong>Option B (Without Git)</strong>: Click the green “Code” button on GitHub, select “Download ZIP,” and extract using your preferred unzip tool (e.g., WinRAR or 7-Zip).</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Navigate to the Project Folder</strong></p>
+
+    <p>After cloning or extracting, navigate into the project directory:</p>
+    <pre><code class="language-plain"> cd dental_ussd
+</code></pre>
+  </li>
+  <li>
+    <p><strong>Create a Virtual Environment</strong></p>
+
+    <p>A virtual environment isolates dependencies to avoid conflicts with your system Python. Create one:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python3 <span class="nt">-m</span> venv venv
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Activate the Virtual Environment</strong></p>
+
+    <ul>
+      <li><strong>Linux/MacOS</strong>:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">source </span>venv/bin/activate
+</code></pre></div>        </div>
+      </li>
+      <li><strong>Windows</strong>:
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  venv\Scripts\activate
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Install Dependencies</strong></p>
+
+    <p>With the virtual environment active, install the required packages:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+</code></pre></div>    </div>
+
+    <p><em>Troubleshooting</em>: If you encounter errors, ensure <code class="language-plaintext highlighter-rouge">pip</code> is up-to-date ( <code class="language-plaintext highlighter-rouge">pip install --upgrade pip</code> ).</p>
+  </li>
+  <li>
+    <p><strong>Update configure.py for Compatibility</strong></p>
+
+    <p>We need to tweak a file in the virtual environment to ensure compatibility with our app’s dependencies. Locate <code class="language-plaintext highlighter-rouge">configure.py</code> inside your virtual environment (e.g., <code class="language-plaintext highlighter-rouge">venv/lib/python3.x/site-packages/</code>). Update the following lines:</p>
+
+    <ul>
+      <li><strong>Replace</strong>:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getargspec</span>
+</code></pre></div>        </div>
+
+        <p><strong>With</strong>:</p>
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">argspec</span> <span class="k">as</span> <span class="n">getargspec</span>
+</code></pre></div>        </div>
+      </li>
+      <li><strong>Replace</strong>:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Mapping</span>
+</code></pre></div>        </div>
+
+        <p><strong>With</strong>:</p>
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Mapping</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+
+    <p>Save and exit. This ensures compatibility with older Python versions.</p>
+
+    <p><img src="/assets/images/part-4-configure-update.png" alt="Part4 configure update." /></p>
+  </li>
+  <li>
+    <p><strong>Run Django Migrations</strong></p>
+
+    <p>Apply the initial database setup:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py makemigrations
+python manage.py migrate
+</code></pre></div>    </div>
+
+    <p><em>Troubleshooting</em>: If makemigrations fails, check for syntax errors in your models (we’ll define them later).</p>
+  </li>
+  <li>
+    <p><strong>Create an Admin User</strong></p>
+
+    <p>Set up an admin user to access Django’s admin panel:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py createsuperuser
+</code></pre></div>    </div>
+
+    <p>Follow the prompts to enter a username, email, and password.</p>
+
+    <p><img src="/assets/images/part-4-createsuperuser.png" alt="Part4 createsuperuser." /></p>
+  </li>
+  <li>
+    <p><strong>Test the Django App</strong></p>
+
+    <p>Launch the Django development server:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py runserver
+</code></pre></div>    </div>
+
+    <p><img src="/assets/images/part-4-runserver.png" alt="Part4 runserver." /></p>
+
+    <p>Open your browser and visit <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000</code>. You should see Django’s welcome page.</p>
+
+    <p><img src="/assets/images/part-4-welcomepage.png" alt="Part4 welcomepage." /></p>
+
+    <p><em>Troubleshooting</em>: If the server doesn’t start, ensure port 8000 is free (<code class="language-plaintext highlighter-rouge">lsof -i :8000</code> on Linux, or use <code class="language-plaintext highlighter-rouge">python manage.py runserver 8001</code>).</p>
+  </li>
+  <li>
+    <p><strong>Access the Admin Site</strong></p>
+
+    <p>Visit <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000/admin</code> and log in with the credentials from Step 8. You’ll see Django’s admin dashboard.</p>
+
+    <p><img src="/assets/images/part-4-djangoadmin.png" alt="Part4 djangoadmin." /></p>
+  </li>
+</ol>
+
+<p><strong>Summary</strong>: Your Django app is now set up! Let’s build the USSD logic next.</p>
+
+<h2 id="2-creating-the-ussd-journey-file-models-api-view-urls-and-utility-functions">2. Creating the USSD Journey File, Models, API View, URLs, and Utility Functions</h2>
+<p>Now that Django is ready, let’s build the core components of our USSD app.</p>
+<h3 id="database-schema-overview">Database Schema Overview</h3>
+
+<p><img src="/assets/images/part-4-db-schema.png" alt="Part4 db-schema." />
+Our app needs three models:</p>
+
+<ul>
+  <li><strong>Patient</strong>: Stores name and phone number.</li>
+  <li><strong>Appointment</strong>: Tracks patient appointments.</li>
+  <li><strong>ClinicAvailability</strong>: Manages available slots per service (appointment_type).</li>
+</ul>
+
+<h3 id="steps-to-build-the-ussd-app">Steps to Build the USSD App</h3>
+
+<ol>
+  <li>
+    <p><strong>Define Models</strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/models.py</code>, define the models to organize our data. Here’s a sample:</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># dental_ussd/models.py
+</span> <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+ <span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="kn">import</span> <span class="n">MinValueValidator</span>
+
+ <span class="k">class</span> <span class="nc">Patient</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+     <span class="n">mobile_number</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">created_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+     <span class="n">updated_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">return</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s"> (</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">mobile_number</span><span class="si">}</span><span class="s">)"</span>
+
+
+ <span class="k">class</span> <span class="nc">Appointment</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+     <span class="n">patient</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Patient</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="p">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">appointment_type</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">clinic_location</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">appointment_date</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span>
+         <span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+         <span class="n">default</span><span class="o">=</span><span class="s">'scheduled'</span><span class="p">,</span>
+         <span class="n">choices</span><span class="o">=</span><span class="p">[(</span><span class="s">'scheduled'</span><span class="p">,</span> <span class="s">'Scheduled'</span><span class="p">),</span> <span class="p">(</span><span class="s">'done'</span><span class="p">,</span> <span class="s">'Done'</span><span class="p">),</span> <span class="p">(</span><span class="s">'cancelled'</span><span class="p">,</span> <span class="s">'Cancelled'</span><span class="p">)]</span>
+     <span class="p">)</span>
+     <span class="n">created_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+     <span class="n">updated_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+         <span class="s">"""Return a string representation of the appointment."""</span>
+         <span class="k">return</span> <span class="sa">f</span><span class="s">"""
+         Type: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">appointment_type</span><span class="si">}</span><span class="s">
+         Location: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">clinic_location</span><span class="si">}</span><span class="s">
+         Date: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">appointment_date</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d %I</span><span class="si">:</span><span class="o">%</span><span class="n">M</span><span class="o">%</span><span class="n">p</span><span class="s">')</span><span class="si">}</span><span class="s">
+         Status: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">status</span><span class="si">}</span><span class="s">"""</span>
+
+
+ <span class="k">class</span> <span class="nc">ClinicAvailability</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+     <span class="n">clinic_location</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">appointment_type</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span>
+         <span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+         <span class="n">default</span><span class="o">=</span><span class="s">'checkup'</span><span class="p">,</span>
+         <span class="n">choices</span><span class="o">=</span><span class="p">[(</span><span class="s">'Checkup'</span><span class="p">,</span> <span class="s">'Checkup'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Cleaning'</span><span class="p">,</span> <span class="s">'Cleaning'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Filling'</span><span class="p">,</span> <span class="s">'Filling'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Extraction'</span><span class="p">,</span> <span class="s">'Extraction'</span><span class="p">)]</span>
+     <span class="p">)</span>
+     <span class="n">available_slots</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">MinValueValidator</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span>
+     <span class="n">appointment_date</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">updated_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+         <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
+             <span class="n">models</span><span class="p">.</span><span class="n">CheckConstraint</span><span class="p">(</span>
+                 <span class="n">check</span><span class="o">=</span><span class="n">models</span><span class="p">.</span><span class="n">Q</span><span class="p">(</span><span class="n">available_slots__gte</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s">'available_slots_non_negative'</span><span class="p">)</span>
+         <span class="p">]</span>
+
+     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">return</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">appointment_type</span><span class="si">}</span><span class="s"> at </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">clinic_location</span><span class="si">}</span><span class="s"> on </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">appointment_date</span><span class="si">}</span><span class="s">"</span>
+</code></pre></div>    </div>
+
+    <p><code class="language-plaintext highlighter-rouge">models.py</code> code here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/models.py" target="_blank">dental_ussd/models.py</a>.</p>
+  </li>
+  <li>
+    <p><strong>Register Models in Admin</strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/admin.py</code>, add the models to the admin panel:</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># dental_ussd/admin.py
+</span> <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+ <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Patient</span><span class="p">,</span> <span class="n">Appointment</span><span class="p">,</span> <span class="n">ClinicAvailability</span>
+
+ <span class="o">@</span><span class="n">admin</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">Patient</span><span class="p">)</span>
+ <span class="k">class</span> <span class="nc">PatientAdmin</span><span class="p">(</span><span class="n">admin</span><span class="p">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">'name'</span><span class="p">,</span> <span class="s">'mobile_number'</span><span class="p">,</span> <span class="s">'created_at'</span><span class="p">,</span> <span class="s">'updated_at'</span><span class="p">)</span>
+
+ <span class="o">@</span><span class="n">admin</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">Appointment</span><span class="p">)</span>
+ <span class="k">class</span> <span class="nc">AppointmentAdmin</span><span class="p">(</span><span class="n">admin</span><span class="p">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">'patient'</span><span class="p">,</span> <span class="s">'appointment_type'</span><span class="p">,</span> <span class="s">'clinic_location'</span><span class="p">,</span> <span class="s">'appointment_date'</span><span class="p">,</span> <span class="s">'status'</span><span class="p">)</span>
+
+
+ <span class="o">@</span><span class="n">admin</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">ClinicAvailability</span><span class="p">)</span>
+ <span class="k">class</span> <span class="nc">ClinicAvailibilityAdmin</span><span class="p">(</span><span class="n">admin</span><span class="p">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">'clinic_location'</span><span class="p">,</span> <span class="s">'appointment_type'</span><span class="p">,</span> <span class="s">'available_slots'</span><span class="p">,</span> <span class="s">'appointment_date'</span><span class="p">,</span> <span class="s">'updated_at'</span><span class="p">)</span>
+</code></pre></div>    </div>
+
+    <p><code class="language-plaintext highlighter-rouge">admin.py</code> code here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/admin.py" target="_blank">dental_ussd/admin.py</a></p>
+  </li>
+  <li>
+    <p><strong>Add App to <code class="language-plaintext highlighter-rouge">INSTALLED_APPS</code></strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_app/settings.py</code>, ensure <code class="language-plaintext highlighter-rouge">dental_ussd</code> is in <code class="language-plaintext highlighter-rouge">INSTALLED_APPS</code>:</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+     <span class="p">...</span>
+     <span class="s">'dental_ussd'</span><span class="p">,</span>
+ <span class="p">]</span>
+</code></pre></div>    </div>
+    <p><img src="/assets/images/part-4-installed-apps.png" alt="Part4 installedapps." /></p>
+  </li>
+  <li>
+    <p><strong>Run Migrations Again</strong></p>
+
+    <p>Update the database with the new models:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python manage.py makemigrations
+ python manage.py migrate
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Verify Models in Admin</strong></p>
+
+    <p>Launch the server:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python manage.py runserver
+</code></pre></div>    </div>
+
+    <p>Visit <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000/admin</code>, log in, and confirm you see the <code class="language-plaintext highlighter-rouge">DENTAL_USSD</code> app with the <code class="language-plaintext highlighter-rouge">Patient</code>, <code class="language-plaintext highlighter-rouge">ClinicAvailability</code>, and <code class="language-plaintext highlighter-rouge">Appointment</code> models.</p>
+
+    <p><img src="/assets/images/part-4-admin-dental-ussd.png" alt="Part4 admin-dental-ussd." /></p>
+  </li>
+  <li>
+    <p><strong>Load Sample Data</strong></p>
+
+    <p>Add sample data to ClinicAvailability:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python manage.py loaddata fixtures/sample_data.json
+</code></pre></div>    </div>
+    <p><img src="/assets/images/part-4-loaddata.png" alt="Part4 loaddata." /></p>
+
+    <p>Check the admin portal (<code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000/admin</code>) under <code class="language-plaintext highlighter-rouge">ClinicAvailability</code> to see the data.</p>
+
+    <p><img src="/assets/images/part-4-sample-data.png" alt="Part4 sampledata." /></p>
+
+    <p><em>Note</em>: For this tutorial, I have used above approach to load sample data to the database, however feel free to manually insert some data to the <code class="language-plaintext highlighter-rouge">ClinicAvilibility</code> model via the django admin.</p>
+  </li>
+  <li>
+    <p><strong>Create the API View</strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/views.py</code>, define the view to handle USSD requests. A simplified example:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kn">import</span> <span class="nn">os</span>
+ <span class="kn">import</span> <span class="nn">yaml</span>
+
+ <span class="c1"># Additional imported libraries
+</span>
+ <span class="k">class</span> <span class="nc">CustomUssdRequest</span><span class="p">(</span><span class="n">UssdRequest</span><span class="p">):</span>
+     <span class="c1"># This class extends the base UssdRequest to handle USSD screen 
+</span>     <span class="c1"># content from YAML files.
+</span>
+     <span class="k">def</span> <span class="nf">get_screens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+         <span class="c1"># Loads screen content from YAML journey files. It finds the specified 
+</span>         <span class="c1"># screen using the screen name and returns its content. If the file or 
+</span>         <span class="c1"># screen doesn't exist, it raises appropriate errors.
+</span>
+ <span class="o">@</span><span class="n">method_decorator</span><span class="p">(</span><span class="n">csrf_exempt</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'dispatch'</span><span class="p">)</span>  <span class="c1"># Exempt this view from CSRF verification
+</span> <span class="k">class</span> <span class="nc">DentalAppUssdGateway</span><span class="p">(</span><span class="n">APIView</span><span class="p">):</span>
+     <span class="k">def</span> <span class="nf">add_cors_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+         <span class="c1"># helper function to allow simulator to communicate with 
+</span>
+     <span class="k">def</span> <span class="nf">options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+         <span class="c1"># This function handles what's called "preflight checks" - 
+</span>         <span class="c1"># before making post request,
+</span>
+     <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+         <span class="c1"># The main method that processes incoming USSD requests:
+</span>
+         <span class="c1"># Extracts the user's input from the request
+</span>         <span class="c1"># Creates a CustomUssdRequest with the user's phone number and input
+</span>         <span class="c1"># Processes the request through the UssdEngine
+</span>         <span class="c1"># Returns a formatted response
+</span>         <span class="c1"># note: full code ommited for breivity, please refer to github for full code
+</span>
+         <span class="n">ussd_request</span> <span class="o">=</span> <span class="n">CustomUssdRequest</span><span class="p">(</span>
+             <span class="n">phone_number</span><span class="o">=</span><span class="n">request</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="s">'phoneNumber'</span><span class="p">].</span><span class="n">strip</span><span class="p">(</span><span class="s">'+'</span><span class="p">),</span>
+             <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
+             <span class="n">ussd_input</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+             <span class="n">service_code</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="s">'serviceCode'</span><span class="p">],</span>
+             <span class="n">language</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'language'</span><span class="p">,</span> <span class="s">'en'</span><span class="p">),</span>
+             <span class="n">use_built_in_session_management</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">journey_name</span> <span class="o">=</span> <span class="s">"simple_patient_journey"</span>
+         <span class="p">)</span>
+
+         <span class="c1"># Process the USSD request using the USSD engine
+</span>         <span class="n">ussd_engine</span> <span class="o">=</span> <span class="n">UssdEngine</span><span class="p">(</span><span class="n">ussd_request</span><span class="p">)</span>
+         <span class="n">ussd_response</span> <span class="o">=</span> <span class="n">ussd_engine</span><span class="p">.</span><span class="n">ussd_dispatcher</span><span class="p">()</span>
+         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">ussd_response_handler</span><span class="p">(</span><span class="n">ussd_response</span><span class="p">)</span>
+
+         <span class="bp">self</span><span class="p">.</span><span class="n">add_cors_headers</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+         <span class="k">return</span> <span class="n">response</span>
+
+     <span class="k">def</span> <span class="nf">ussd_response_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ussd_response</span><span class="p">):</span>
+         <span class="c1"># Formats the USSD engine's response into the required format with:
+</span>
+         <span class="c1"># A success status
+</span>         <span class="c1"># The message content
+</span>         <span class="c1"># The message type (CON for continuing sessions, END for ending sessions)
+</span></code></pre></div>    </div>
+
+    <p><code class="language-plaintext highlighter-rouge">views.py</code> code here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/views.py" target="_blank">dental_ussd/views.py</a></p>
+  </li>
+  <li>
+    <p><strong>Set Up URLs</strong></p>
+
+    <ul>
+      <li>
+        <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/urls.py</code>, add:</p>
+
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># dental_ussd/urls.py
+</span><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+
+<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">DentalAppUssdGateway</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">"dental_ussd_gw/"</span><span class="p">,</span> <span class="n">DentalAppUssdGateway</span><span class="p">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s">"dental_ussd_gw"</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre></div>        </div>
+
+        <p>Code: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/urls.py" target="_blank">dental_ussd/urls.py</a></p>
+      </li>
+      <li>
+        <p>In <code class="language-plaintext highlighter-rouge">dental_app/urls.py</code>, include the app’s URLs:</p>
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">include</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">'admin/'</span><span class="p">,</span> <span class="n">admin</span><span class="p">.</span><span class="n">site</span><span class="p">.</span><span class="n">urls</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">'dental_ussd/'</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">'dental_ussd.urls'</span><span class="p">)),</span>
+<span class="p">]</span>
+</code></pre></div>        </div>
+
+        <p>Code: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_app/urls.py" target="_blank">dental_app/urls.py</a></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Define the USSD Journey File (YAML)</strong>*</p>
+
+    <p>The USSD journey defines the interactive menu flow. First, let’s visualize it:
+<img src="/assets/images/flow-2.png" alt="Part4  ussd journey flow." />
+Now, here’s the YAML representation of that flow, saved as <code class="language-plaintext highlighter-rouge">dental_appointment_menu.yml</code> in the <code class="language-plaintext highlighter-rouge">journeys</code> directory:</p>
+
+    <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Initial Screen</span>
+<span class="na">initial_screen</span><span class="pi">:</span> <span class="s">authenticate_user</span>
+
+<span class="c1"># Authentication</span>
+<span class="na">authenticate_user</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">function_screen</span>
+<span class="na">function</span><span class="pi">:</span> <span class="s">dental_ussd.utils.authenticate_user</span>
+<span class="na">session_key</span><span class="pi">:</span> <span class="s">patient</span>
+<span class="na">next_screen</span><span class="pi">:</span> <span class="s">router_1</span>
+
+<span class="na">router_1</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">router_screen</span>
+<span class="na">default_next_screen</span><span class="pi">:</span> <span class="s">authenticated_menu</span>
+<span class="na">router_options</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">expression</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{</span><span class="nv"> </span><span class="s">{</span><span class="nv"> </span><span class="s">patient</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">None</span><span class="nv"> </span><span class="s">}</span><span class="nv"> </span><span class="s">}"</span>
+    <span class="na">next_screen</span><span class="pi">:</span> <span class="s">non_authenticated_menu</span>
+
+<span class="c1"># Non Authenticated Menu</span>
+<span class="na">non_authenticated_menu</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">menu_screen</span>
+<span class="na">text</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">Welcome! No Profile found.</span>
+<span class="na">options</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Register (Enter Name)</span>
+    <span class="na">next_screen</span><span class="pi">:</span> <span class="s">enter_name</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Exit</span>
+    <span class="na">next_screen</span><span class="pi">:</span> <span class="s">end</span>
+        
+<span class="na">enter_name</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">input_screen</span>
+<span class="na">text</span><span class="pi">:</span> <span class="s">Enter Full Name</span>
+<span class="na">input_identifier</span><span class="pi">:</span> <span class="s">patient_name</span>
+<span class="na">next_screen</span><span class="pi">:</span> <span class="s">register_user</span>
+
+<span class="na">register_user</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">function_screen</span>
+<span class="na">function</span><span class="pi">:</span> <span class="s">dental_ussd.utils.register_user</span>
+<span class="na">session_key</span><span class="pi">:</span> <span class="s">is_registered</span>
+<span class="na">next_screen</span><span class="pi">:</span> <span class="s">register_confirmation</span>
+
+<span class="c1"># Additional nodes excluded</span>
+<span class="c1">#</span>
+
+<span class="na">end</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">quit_screen</span>
+<span class="na">text</span><span class="pi">:</span> <span class="s">Thank you for using our service. Goodbye!</span>
+
+</code></pre></div>    </div>
+    <p>Full <code class="language-plaintext highlighter-rouge">dental_appointment_menu.yml</code> here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/journeys/dental_appointment_menu.yml" target="_blank">journeys/dental_appointment_menu.yml</a></p>
+
+    <p>Update <code class="language-plaintext highlighter-rouge">dental_app/settings.py</code> to use this file:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DEFAULT_USSD_SCREEN_JOURNEY</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">'journeys'</span><span class="p">,</span> <span class="s">'dental_appointment_menu.yml'</span><span class="p">)</span>
+</code></pre></div>    </div>
+    <p><img src="/assets/images/part-4-journey-update.png" alt="Part4 journey-update." /></p>
+  </li>
+  <li>
+    <p><strong>Add Utility Functions</strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/utils.py</code>, add helper functions (you may have to create if it doesn’t exist):</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span><span class="n">ussd_request</span><span class="p">):</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">phone_number</span> <span class="o">=</span> <span class="n">ussd_request</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'phone_number'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">phone_number</span><span class="p">)</span>
+    <span class="n">patient_reg</span> <span class="o">=</span> <span class="n">get_or_none</span><span class="p">(</span><span class="n">Patient</span><span class="p">,</span> <span class="n">mobile_number</span><span class="o">=</span><span class="n">phone_number</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">patient_reg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">patient_reg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">patient_reg</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"[*] resp=</span><span class="si">{</span><span class="n">resp</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resp</span>
+
+<span class="k">def</span> <span class="nf">register_user</span><span class="p">(</span><span class="n">ussd_request</span><span class="p">):</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">patient_name</span> <span class="o">=</span> <span class="n">ussd_request</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'patient_name'</span><span class="p">)</span>
+    <span class="n">phone_number</span> <span class="o">=</span> <span class="n">ussd_request</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'phone_number'</span><span class="p">)</span>
+    <span class="n">patient</span> <span class="o">=</span> <span class="n">Patient</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">mobile_number</span><span class="o">=</span><span class="n">phone_number</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">patient_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">patient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">patient</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="s">"Patient already registered"</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"[*] resp=</span><span class="si">{</span><span class="n">resp</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resp</span>
+</code></pre></div>    </div>
+
+    <p>Full utils here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/utils.py" target="_blank">dental_app/dental_ussd/utils.py</a>.</p>
+  </li>
+  <li>
+    <p>Generate an Authentication TokenIn the admin panel (<code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000/admin</code>), go to <code class="language-plaintext highlighter-rouge">Tokens</code> (under <code class="language-plaintext highlighter-rouge">Authtoken</code>), click <code class="language-plaintext highlighter-rouge">Add Token</code>, select your user, and save. Copy the generated token (e.g., <code class="language-plaintext highlighter-rouge">05866ced4ed0900591a002cb9ef196b3eed2490a</code>).</p>
+
+    <p><img src="/assets/images/part-4-auth-token.png" alt="Part4 auth-token." /></p>
+
+    <p><strong>Summary</strong>: We’ve built the core USSD app components! Let’s test it next.</p>
+  </li>
+</ol>
+
+<h2 id="3-simulating-the-ussd-service">3. Simulating the USSD Service</h2>
+<p>Let’s simulate our USSD app using a custom simulator.</p>
+
+<ol>
+  <li>
+    <p><strong>Download the Simulator</strong></p>
+
+    <p>Clone my forked simulator repo:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/jayskar/ussd-simulator.git
+</code></pre></div>    </div>
+
+    <p>Navigate to the ussd-mock directory:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>ussd-simulator/ussd-mock
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Set Up the Simulator</strong></p>
+
+    <ul>
+      <li><strong>Install Node.js if needed (nodejs.org)</strong>.</li>
+      <li>
+        <p><strong>Install dependencies</strong>:</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  npm <span class="nb">install</span>
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><strong>Edit the <code class="language-plaintext highlighter-rouge">.env</code> file in <code class="language-plaintext highlighter-rouge">ussd-mock/</code></strong>:</p>
+
+        <p>Replace <code class="language-plaintext highlighter-rouge">&lt;YOUR_API_TOKEN&gt;</code> with your token:</p>
+        <pre><code class="language-plain">  VUE_APP_AUTH_TOKEN=Token 05866ced4ed0900591a002cb9ef196b3eed2490a
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Launch the Simulator</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run serve
+</code></pre></div>    </div>
+
+    <p>Once compiled, visit http://localhost:8081 in your browser. You’ll see a test phone interface.</p>
+
+    <p><img src="/assets/images/part-4-phone-simulator.png" alt="Part4 simulator interface." /></p>
+  </li>
+  <li>
+    <p><strong>Configure CORS in Django</strong></p>
+
+    <p>To allow the simulator to communicate with Django, update <code class="language-plaintext highlighter-rouge">dental_app/settings.py</code>:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CORS_ALLOWED_ORIGINS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'http://localhost:8081'</span><span class="p">]</span> <span class="c1"># Change port if your simulator is running on a different port
+</span><span class="n">CORS_ALLOW_METHODS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">]</span>
+<span class="n">CORS_ALLOW_HEADERS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Authorization'</span><span class="p">,</span> <span class="s">'Content-Type'</span><span class="p">]</span>
+<span class="n">CORS_ALLOW_CREDENTIALS</span> <span class="o">=</span> <span class="bp">True</span>
+</code></pre></div>    </div>
+
+    <p><em>Note</em>: Ensure <code class="language-plaintext highlighter-rouge">django-cors-headers</code> is installed (<code class="language-plaintext highlighter-rouge">pip install django-cors-headers</code>) and added to <code class="language-plaintext highlighter-rouge">INSTALLED_APPS</code>.</p>
+  </li>
+  <li>
+    <p><strong>Run Django Server</strong></p>
+
+    <p>In the Django project directory:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py runserver
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Test with Simulator</strong></p>
+
+    <p>In the simulator (http://localhost:8081), click the phone icon to open the dial pad.<br />
+Click the call button. You should see the following:<br />
+<img src="/assets/images/part-4-simulator-dental-menu.png" alt="Part4 auth-token." /></p>
+
+    <p>If you get a prompt <code class="language-plaintext highlighter-rouge">Welcome to the Dental Appointment Service</code>, check if you have updated USSD Journey File n <code class="language-plaintext highlighter-rouge">dental_app/settings.py</code>, ensure the journey file path is set (refer to above 2.9):</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DEFAULT_USSD_SCREEN_JOURNEY</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">'journeys'</span><span class="p">,</span> <span class="s">'dental_appointment_menu.yml'</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Test the USSD Service</strong></p>
+
+    <ul>
+      <li>In the simulator (http://localhost:8081), you can change phone number to any number you choose.</li>
+      <li>Dial <code class="language-plaintext highlighter-rouge">*123#</code> into the phone then click call button.</li>
+      <li>Navigate through the menu to book appointments.</li>
+    </ul>
+
+    <p><em>Troubleshooting</em>: If it fails, verify the token, CORS settings, and journey file path.</p>
+  </li>
+</ol>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>Congratulations! You’ve built and tested a Dental Appointment USSD app using Django. Join the discussion on GitHub Issues and share your feedback. In Part 5, we’ll focus on making the app production-ready with best practices, then move into deployment, and finally touch on scaling for production to handle real-world demand. Happy coding!</p>]]></content><author><name>David Sikar</name></author><summary type="html"><![CDATA[Build Your Own USSD APP with Opensource Power]]></summary></entry><entry><title type="html">Part 3: Opensource Stack - Tools I’m Using</title><link href="http://localhost:4000/2025/05/18/part-3-open-source-stack-tools-i'm-using.html" rel="alternate" type="text/html" title="Part 3: Opensource Stack - Tools I’m Using" /><published>2025-05-18T00:00:00+12:00</published><updated>2025-05-18T00:00:00+12:00</updated><id>http://localhost:4000/2025/05/18/part-3-open-source-stack-tools-i&apos;m-using</id><content type="html" xml:base="http://localhost:4000/2025/05/18/part-3-open-source-stack-tools-i&apos;m-using.html"><![CDATA[<p><img src="/assets/images/part-3-banner.png" alt="Part3 banner image." />
+<em>Build Your Own USSD APP with Opensource Power</em></p>
+
+<p>Welcome to Part 3 of our <em>Build Your Own USSD App</em> series! In Part 2, we explored a dental appointment app designed for Papua New Guinea’s mobile users, enabling bookings on basic phones without internet. Now, we’re ready to set up the free, open-source tools that make this possible—no large budget required. This is ideal for individuals or small teams in PNG looking to address local challenges like healthcare access through mobile technology.</p>
+
+<p>Imagine helping someone in Gaire village book a dental visit to UPNG Dental School Clinic with a simple USSD code. That’s the goal, and we’ll use customizable tools, including a few tailored adjustments, to get there. Let’s walk through the installation process step by step.</p>
+
+<h2 id="why-choose-free-open-source-tools">Why Choose Free, Open-Source Tools?</h2>
+<p>Open-source tools offer significant advantages:</p>
+
+<ul>
+  <li><strong>No Cost</strong>: Free to use, perfect for budget-conscious projects in PNG.</li>
+  <li><strong>Customizable</strong>: You can modify the code to suit your needs.</li>
+  <li><strong>Community Support</strong>: A global network is available to assist with issues.</li>
+  <li><strong>Sustainable</strong>: Built for long-term use in community-driven initiatives.
+Let’s set up the essential tools to start your project.</li>
+</ul>
+
+<h2 id="your-toolbox--installation-steps">Your Toolbox – Installation Steps</h2>
+<p>Here’s how to install the core components—Python, a virtual environment with virtualenv, environment variable management with direnv, a modified ussd_engine with Redis for session management, a custom ussd-simulator, and a data keeper (PostgreSQL or SQLite). We’ll cover steps for both Windows and Linux (Ubuntu, your preferred system).</p>
+
+<h2 id="python--the-foundation-of-your-app">Python – The Foundation of Your App</h2>
+<p>Python is a beginner-friendly language that forms the base of our USSD app. Here’s how to install it:</p>
+
+<ul>
+  <li><strong>For Windows</strong>:
+    <ol>
+      <li>Visit python.org and download the latest version (e.g., 3.12).</li>
+      <li>Run the installer, ensure “Add Python to PATH” is checked, and click Next.</li>
+      <li>Open Command Prompt (search “cmd” in the Start menu), type <code class="language-plaintext highlighter-rouge">python --version</code>, and press Enter. You should see something like “Python 3.12.3.” If not, verify the PATH setting.</li>
+    </ol>
+  </li>
+  <li><strong>For Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Open your terminal (Ctrl+Alt+T).</li>
+      <li>Update your system: <code class="language-plaintext highlighter-rouge">sudo apt update &amp;&amp; sudo apt upgrade -y</code>.</li>
+      <li>Install Python and pip: <code class="language-plaintext highlighter-rouge">sudo apt install python3 python3-pip -y</code>.</li>
+      <li>Verify the installation: Type <code class="language-plaintext highlighter-rouge">python3 --version</code> (e.g., “Python 3.12.3”) and <code class="language-plaintext highlighter-rouge">pip3 --version</code>. If it fails, check your internet connection.</li>
+    </ol>
+  </li>
+</ul>
+
+<p>Python’s simplicity shines here:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">say_hello</span><span class="p">(</span><span class="n">name</span><span class="p">):</span> 
+    <span class="k">return</span> <span class="sa">f</span><span class="s">"Welcome, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">!"</span>
+<span class="k">print</span><span class="p">(</span><span class="n">say_hello</span><span class="p">(</span><span class="s">"John"</span><span class="p">))</span> <span class="c1"># Output: Welcome, John!
+</span></code></pre></div></div>
+<h2 id="virtualenv--creating-a-clean-workspace">virtualenv – Creating a Clean Workspace</h2>
+<p>Using <code class="language-plaintext highlighter-rouge">virtualenv</code> sets up an isolated environment for your project, preventing conflicts with other software. Think of it as a dedicated workspace for your app.</p>
+
+<ul>
+  <li><strong>For Both Windows and Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Install virtualenv: pip3 install virtualenv (or pip on Windows).</li>
+      <li>Create a project folder: mkdir ussd_dental_app &amp;&amp; cd ussd_dental_app.</li>
+      <li>Set up the virtual environment: virtualenv venv.</li>
+      <li>Activate it:
+        <ul>
+          <li>Windows:
+  <code class="language-plaintext highlighter-rouge">venv\Scripts\activate</code> (you’ll see (venv) in your prompt).</li>
+          <li>Ubuntu: 
+  <code class="language-plaintext highlighter-rouge">source venv/bin/activate</code> (look for (venv)).</li>
+        </ul>
+      </li>
+      <li>Deactivate later with: <code class="language-plaintext highlighter-rouge">deactivate</code> (keep it active for now).
+All installations will now stay within this environment.</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="direnv--managing-environment-variables">direnv – Managing Environment Variables</h2>
+<p><code class="language-plaintext highlighter-rouge">direnv</code> automates the loading of environment variables (e.g., database passwords or Redis settings), making your setup more secure and efficient.</p>
+
+<ul>
+  <li><strong>For Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Install direnv: <code class="language-plaintext highlighter-rouge">sudo apt install direnv -y</code>.</li>
+      <li>Add it to your shell: Edit <code class="language-plaintext highlighter-rouge">~/.bashrc</code> with <code class="language-plaintext highlighter-rouge">nano ~/.bashrc</code>, add <code class="language-plaintext highlighter-rouge">eval "$(direnv hook bash)"</code> at the end, save, and exit.</li>
+      <li>Reload your shell: <code class="language-plaintext highlighter-rouge">source ~/.bashrc</code>.</li>
+      <li>In your project folder (ussd_dental_app), create a .envrc file: <code class="language-plaintext highlighter-rouge">echo "export MY_APP_ENV=development" &gt; .envrc</code>.
+  If you are using the starter project templated, navigate to the root folder of the starter project (<code class="language-plaintext highlighter-rouge">ussd_app</code>) and execute the above command</li>
+      <li>Allow it: <code class="language-plaintext highlighter-rouge">direnv allow .</code>. Variables will load automatically when you cd into the folder.</li>
+    </ol>
+  </li>
+  <li><strong>For Windows</strong>:
+<code class="language-plaintext highlighter-rouge">direnv</code> is less straightforward on Windows. For now, set variables manually in Command Prompt with <code class="language-plaintext highlighter-rouge">set MY_APP_ENV=development</code> (or use PowerShell). If you use WSL, follow the Ubuntu steps for a smoother experience.</li>
+</ul>
+
+<h2 id="redis--session-management-for-ussd_engine">Redis – Session Management for ussd_engine</h2>
+<p>Redis is a fast, in-memory database we’ll use for managing USSD session data with ussd_engine, ensuring quick access to user interactions. Install it:</p>
+
+<ul>
+  <li><strong>For Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Install Redis: <code class="language-plaintext highlighter-rouge">sudo apt install redis-server -y</code>.</li>
+      <li>Start the Redis server: <code class="language-plaintext highlighter-rouge">sudo systemctl enable redis</code> and <code class="language-plaintext highlighter-rouge">sudo systemctl start redis</code>.</li>
+      <li>Verify it’s running: <code class="language-plaintext highlighter-rouge">redis-cli ping</code>. You should see “PONG.”</li>
+      <li>Add the Redis connection details to your <code class="language-plaintext highlighter-rouge">.envrc</code>: <code class="language-plaintext highlighter-rouge">echo "export REDIS_URL=redis://localhost:6379/0" &gt;&gt; .envrc</code> and run <code class="language-plaintext highlighter-rouge">direnv allow .</code> .</li>
+    </ol>
+  </li>
+  <li><strong>For Windows:</strong>
+Redis doesn’t have an official Windows build, but you can use WSL or a precompiled binary:
+    <ol>
+      <li>Download a Redis binary for Windows (e.g., from github.com/microsoftarchive/redis).</li>
+      <li>Extract and run <code class="language-plaintext highlighter-rouge">redis-server.exe</code>.</li>
+      <li>Verify: Open another Command Prompt, run <code class="language-plaintext highlighter-rouge">redis-cli.exe ping</code>, and expect “PONG.”</li>
+      <li>Set the variable manually: set <code class="language-plaintext highlighter-rouge">alcoolREDIS_URL=redis://localhost:6379/0</code>. If using WSL, follow the Ubuntu steps.</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="ussd_engine--a-customized-ussd-engine">ussd_engine – A Customized USSD Engine</h2>
+<p>This tool, originally by Francis Mwangi (thank you!), drives our USSD flow and uses Redis for session management. I forked his ussd_engine repository and adjusted it for Python 3 compatibility. Install my version:</p>
+
+<ol>
+  <li>With your virtual environment active, run:
+<code class="language-plaintext highlighter-rouge">pip install git+https://github.com/jayskar/ussd_engine.git</code> .</li>
+  <li>Install the Redis Python client:
+pip install redis.</li>
+  <li>Verify: <code class="language-plaintext highlighter-rouge">pip list | grep ussd</code>. You should see the following.
+<code class="language-plaintext highlighter-rouge">ussd_airflow_engine 0.3.4.dev8+g0263868</code></li>
+</ol>
+
+<p>Here’s a sample menu:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">authenticated_menu</span><span class="pi">:</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">menu_screen</span>
+  <span class="na">text</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">Welcome.</span>
+  <span class="na">options</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Check Appointments</span>
+      <span class="na">next_screen</span><span class="pi">:</span> <span class="s">check_appointments</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Book New Appointment</span>
+      <span class="na">next_screen</span><span class="pi">:</span> <span class="s">book_appointment</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Cancel Appointment</span>
+      <span class="na">next_screen</span><span class="pi">:</span> <span class="s">cancel_appointment</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Exit</span>
+      <span class="na">next_screen</span><span class="pi">:</span> <span class="s">end</span>
+</code></pre></div></div>
+<h2 id="ussd-simulator--a-tailored-testing-tool">ussd-simulator – A Tailored Testing Tool</h2>
+<p>We’re using a simulator from Anthony-cloud-1’s repository (github.com/Anthony-cloud-1/ussd-simulator). I forked and adjusted it to fit our django app’s needs. Set it up:</p>
+
+<ol>
+  <li>Clone my fork:
+<code class="language-plaintext highlighter-rouge">git clone https://github.com/jayskar/ussd-simulator.git</code> (use my GitHub handle).</li>
+  <li>Navigate:
+<code class="language-plaintext highlighter-rouge">cd ussd-simulator/ussd-mock</code>.</li>
+  <li>Install dependencies:
+<code class="language-plaintext highlighter-rouge">npm install</code>.</li>
+  <li>Run it with <code class="language-plaintext highlighter-rouge">npm run serve</code> (details in Part 4). This lets you simulate USSD calls like *123#.</li>
+</ol>
+
+<h2 id="postgresql-or-sqlite--your-data-storage">PostgreSQL (or SQLite) – Your Data Storage</h2>
+<p>SQLite is included with Python for testing, while PostgreSQL is recommended for production. Install it:</p>
+
+<ul>
+  <li><strong>For Both Windows and Linux (Ubuntu)</strong>:
+    <ol>
+      <li>Download from postgresql.org.
+        <ul>
+          <li><strong>Windows</strong>: Run the installer, set a password, and note port 5432.</li>
+          <li><strong>Ubuntu</strong>:
+  <code class="language-plaintext highlighter-rouge">sudo apt install postgresql postgresql-contrib -y</code>, then
+  <code class="language-plaintext highlighter-rouge">sudo service postgresql start</code>.
+  Verify with
+  <code class="language-plaintext highlighter-rouge">sudo -u postgres psql -c "SELECT version();”</code> (expect a version string).</li>
+        </ul>
+      </li>
+      <li>Connection details will be covered next time.
+Use <code class="language-plaintext highlighter-rouge">direnv</code> to set your database password: Add export <code class="language-plaintext highlighter-rouge">DB_PASSWORD=yourpassword</code> to <code class="language-plaintext highlighter-rouge">.envrc</code> and run <code class="language-plaintext highlighter-rouge">direnv allow .</code> .</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="extra-helpers-optional">Extra Helpers (Optional)</h2>
+<p>Consider Ngrok from ngrok.com to test api calls.</p>
+
+<h2 id="the-blunt-truth-watch-out-for-snags">The Blunt Truth: Watch Out for Snags</h2>
+<p>Installation can be tricky—miss “Add to PATH” on Windows, forget sudo on Ubuntu, or misconfigure direnv, and you’ll hit roadblocks. If Redis doesn’t start, check your port (6379) isn’t blocked. If my fork URLs fail, check my GitHub handle in the comments—I might need to update access. I’ve skipped Django setup (it’s too much here); look for my next article with Cookiecutter. Let’s keep it straightforward for now.</p>
+
+<h2 id="whats-coming-next-building-the-app">What’s Coming Next? Building the App</h2>
+<p>Part 4 will guide you to build and test the dental app flow using this setup and our custom simulator. Catch up on Part 1 &amp; Part 2 if you missed them. Tried this yet? Share your successes or challenges below—I’m here to assist!</p>
+
+<p>#USSD #DigitalInclusion #PapuaNewGuinea #OpenSource #MobileTech #TechForGood</p>]]></content><author><name>David Sikar</name></author><summary type="html"><![CDATA[Build Your Own USSD APP with Opensource Power]]></summary></entry><entry><title type="html">Part 2: Designing Dynamic USSD Apps with Open-Source Tools</title><link href="http://localhost:4000/2025/05/08/part2-designing-dynamic-ussd-apps-with-opensource-tools.html" rel="alternate" type="text/html" title="Part 2: Designing Dynamic USSD Apps with Open-Source Tools" /><published>2025-05-08T00:00:00+12:00</published><updated>2025-05-08T00:00:00+12:00</updated><id>http://localhost:4000/2025/05/08/part2-designing-dynamic-ussd-apps-with-opensource-tools</id><content type="html" xml:base="http://localhost:4000/2025/05/08/part2-designing-dynamic-ussd-apps-with-opensource-tools.html"><![CDATA[<p><img src="/assets/images/part-2-banner.jpg" alt="Part2 banner image." />
+<em>Build Your Own USSD APP with Opensource Power</em></p>
+
+<p>In Part 1, we explored why USSD remains vital in Papua New Guinea, powering essential services without internet access. Now, let’s dive into how USSD apps work and how you can create dynamic, user-friendly experiences for developers, businesses, or telecom enthusiasts.</p>
+<h2 id="why-build-dynamic-ussd-flows">Why Build Dynamic USSD Flows?</h2>
+<p>Dynamic USSD flows improve flexibility, personalization, and scalability, transforming basic menus into intelligent services. Here’s why they matter:</p>
+
+<ul>
+  <li><strong>Flexibility:</strong> Update services or menus without altering your app’s core code.</li>
+  <li><strong>Personalization:</strong> Offer menus tailored to user profiles, like suggesting data bundles based on low balances.</li>
+  <li><strong>Efficiency:</strong> Minimize downtime when rolling out new offers.</li>
+  <li><strong>Scalability:</strong> Manage growing services with ease.</li>
+</ul>
+
+<p>In short, dynamic USSD delivers better user experiences and faster innovation.</p>
+<h2 id="static-vs-dynamic-ussd-menus">Static vs. Dynamic USSD Menus</h2>
+<p>USSD apps fall into two categories:</p>
+
+<ol>
+  <li>
+    <p><strong>Static USSD Menus</strong>
+ Hard-coded menus with fixed content, ideal for simple tasks like balance checks. Example:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1. Check Balance 
+ 2. Call Support
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Dynamic USSD Menus</strong>
+ Menus created in real-time based on user input, account data, or promotions. 
+ Example: When you subscribe to Digicel RedClub, the <code class="language-plaintext highlighter-rouge">*675#</code> menu is updated dynamically to cater for your subscription and available balance</p>
+  </li>
+</ol>
+
+<p>Dynamic menus enable smarter, personalized services.</p>
+<h2 id="key-concepts-behind-a-dynamic-ussd-app">Key Concepts Behind a Dynamic USSD App</h2>
+<p>Dynamic USSD apps rely on a few core concepts. Here’s what you need to know:</p>
+<h3 id="session-management">Session Management</h3>
+<p>USSD is session-based, like a phone call—your app must track each interaction using a unique session ID. If the session is lost, the user’s experience breaks.</p>
+<h3 id="state-machine-design">State Machine Design</h3>
+<p>Each menu is a “state” (or screen) in a choose-your-own-adventure flow. Your app must:</p>
+
+<ul>
+  <li>Track the user’s current state.</li>
+  <li>Show available options.</li>
+  <li>Handle invalid inputs, like redirecting users who enter wrong choices.</li>
+</ul>
+
+<h3 id="menu-retrieval-from-backend">Menu Retrieval from Backend</h3>
+<p>Instead of hardcoding menus, your app pulls them from a backend (e.g., a Django server) based on:</p>
+
+<ul>
+  <li>The user’s session state.</li>
+  <li>Their mobile number (MSISDN).</li>
+  <li>Live data like balance or active promotions.This lets you update offers without rewriting the app.</li>
+</ul>
+
+<h3 id="handling-timeouts-and-errors">Handling Timeouts and Errors</h3>
+<p>USSD sessions can time out in as little as 180 seconds. To avoid disruptions:</p>
+
+<ul>
+  <li>Guide users quickly with clear options.</li>
+  <li>Validate inputs and recover from errors, e.g., <code class="language-plaintext highlighter-rouge">Invalid amount. Try again.</code></li>
+</ul>
+
+<h3 id="short-clear-prompts">Short, Clear Prompts</h3>
+<p>Most users are on small feature phone screens. Prompts must be concise:</p>
+
+<ul>
+  <li><strong>Good:</strong> <code class="language-plaintext highlighter-rouge">Enter amount (5-20):</code></li>
+  <li><strong>Bad:</strong> <code class="language-plaintext highlighter-rouge">Please specify the desired top-up amount in Kina.</code></li>
+</ul>
+
+<p>Fortunately, the open-source <code class="language-plaintext highlighter-rouge">ussd-engine</code> Python library simplifies session management, state handling, and error processing, letting you focus on designing great user flows.</p>
+<h2 id="ussd-flow-basics-recap">USSD Flow Basics <em>(recap)</em></h2>
+<p>A dynamic USSD session is a conversation between the user and your app. Here’s the flow:</p>
+
+<ol>
+  <li><strong>User Input:</strong> User dials a shortcode like <code class="language-plaintext highlighter-rouge">*123#</code>.</li>
+  <li><strong>Gateway Request:</strong> The telecom’s USSD gateway sends a request to your app (via HTTP).</li>
+  <li>
+    <p><strong>App Sends Menu:</strong> Your app responds with a menu, e.g.,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1. Buy Data Bundle 
+ 2. Check Balance
+</code></pre></div>    </div>
+  </li>
+  <li><strong>User Chooses:</strong> The user selects an option, and the gateway sends their choice back.</li>
+  <li><strong>App Processes Input:</strong> Your app uses logic, databases, or APIs to send the next menu.</li>
+  <li><strong>Repeat or End:</strong> The process continues until the session ends or times out. If a user doesn’t respond, they’ll need to dial again.</li>
+</ol>
+
+<h2 id="a-sample-dynamic-ussd-flow-booking-and-managing-dental-appointments">A Sample Dynamic USSD Flow: Booking and Managing Dental Appointments</h2>
+
+<p>This flow demonstrates a dynamic USSD session where the app allows users to check past appointments, book new dental visits, and manage cancellations, with menus tailored to their history and real-time clinic availability.</p>
+
+<ol>
+  <li>
+    <p><strong>User dials <code class="language-plaintext highlighter-rouge">*123#</code>.</strong></p>
+
+    <ul>
+      <li>
+        <p>App authenticates the user via the mobile number (MSISDN) and retrieves their profile from the backend.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Welcome, John!
+  1. Check Appointments
+  2. Book New Appointment
+  3. Cancel Appointment
+  4. Exit
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “1” (Check Appointments).</strong></p>
+
+    <ul>
+      <li>
+        <p>App queries the user’s past and upcoming dental appointments.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Your Dental Appointments: 
+  1. Cleaning (10/03/2025, Koki Dental Clinic - Done) 
+  2. Checkup (15/05/2025, Gerehu Dental Clinic - Upcoming) 
+  3. Back
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p>Alternative (No Appointments):</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  No appointments found. 
+  1. Book New Appointment 
+  2. Exit
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “2” (Book New Appointment) from the main menu.</strong></p>
+
+    <ul>
+      <li>
+        <p>App retrieves a list of appointment types and checks clinic availability in real-time.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Select Appointment Type: 
+  1. Cleaning 
+  2. Checkup 
+  3. Filling 
+  4. Back
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “2” (Checkup).</strong></p>
+
+    <ul>
+      <li>
+        <p>App queries available clinics and time slots for a checkup.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Available Checkup Slots: 
+  1. Koki Dental Clinic (10/05/2025, 9 AM) 
+  2. Gerehu Dental Clinic (12/05/2025, 2 PM) 
+  3. Back
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “1” (Koki Dental Clinic, 10/05/2025, 9 AM).</strong></p>
+
+    <ul>
+      <li>
+        <p>App prompts for confirmation.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Book Checkup at Koki Dental Clinic, 10/05/2025, 9 AM? 
+  1. Confirm 
+  2. Cancel
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “1” (Confirm).</strong></p>
+
+    <ul>
+      <li>
+        <p>App saves the appointment and sends an SMS reminder (assumed via a gateway).</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Appointment confirmed! You'll get an SMS reminder. 
+  1. Back to Main Menu
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Alternative Path: User selects “3” (Cancel Appointment) from the main menu.</strong></p>
+
+    <ul>
+      <li>
+        <p>App retrieves upcoming appointments.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Select Appointment to Cancel: 
+  1. Checkup (15/05/2025, Gerehu Dental Clinic) 
+  2. Back
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p>Alternative (No Upcoming Appointments):</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  No upcoming appointments to cancel. 
+  1. Book New Appointment 
+  2. Exit
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “1” (Checkup, 15/05/2025).</strong></p>
+
+    <ul>
+      <li>
+        <p>App prompts for cancellation confirmation.</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Cancel Checkup on 15/05/2025 at Gerehu Dental Clinic? 
+  1. Confirm 
+  2. Back
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>User selects “1” (Confirm).</strong></p>
+
+    <ul>
+      <li>
+        <p>App updates the appointment status to “Cancelled.”</p>
+      </li>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Appointment cancelled successfully! 
+  1. Back to Main Menu
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Error Handling: Invalid Option (e.g., “5” in step 1).</strong></p>
+
+    <ul>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Invalid choice. Please try again: 
+  1. Check Appointments 
+  2. Book New Appointment 
+  3. Cancel Appointment 
+  4. Exit
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Error Handling: No User Profile Found (e.g., new MSISDN).</strong></p>
+
+    <ul>
+      <li>
+        <p>App Response:</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Welcome! No profile found.
+  1. Register (Enter Name)
+  2. Exit
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p>If user selects “1”, they’re prompted to enter their name, and a new profile is created.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="closing-thoughts">Closing Thoughts</h2>
+<p>Dynamic USSD flows are essential for delivering fast, relevant, and user-friendly mobile services, especially in markets like Papua New Guinea. By understanding the fundamentals, you’re well on your way to creating impactful solutions.</p>
+
+<p>In Part 3, we’ll roll up our sleeves and dive into the open-source tech stack—using Python, Django, and the ussd-engine library by Francis Mwangi (@mwaaas), alongside Postgres for data management, Ubuntu for our coding environment, VS Code as our IDE, and tools like Postman or cURL to test API requests. We’ll set up the environment and prepare to build your first USSD menu, bringing these concepts to life. Stay tuned!</p>
+
+<p>Have you used USSD services in PNG or elsewhere? What mobile solutions would you like to build with these tools? Share your thoughts or questions below, and get ready for Part 3 by installing Python and VS Code if you’d like to follow along!
+#USSD #DigitalInclusion #PapuaNewGuinea #OpenSource</p>]]></content><author><name>David Sikar</name></author><summary type="html"><![CDATA[Build Your Own USSD APP with Opensource Power]]></summary></entry><entry><title type="html">Part 1: What is USSD and Why does it Matter Today</title><link href="http://localhost:4000/2025/05/07/part-1-what-is-ussd-and-why-does-it-matter-today.html" rel="alternate" type="text/html" title="Part 1: What is USSD and Why does it Matter Today" /><published>2025-05-07T00:00:00+12:00</published><updated>2025-05-07T00:00:00+12:00</updated><id>http://localhost:4000/2025/05/07/part-1-what-is-ussd-and-why-does-it-matter-today</id><content type="html" xml:base="http://localhost:4000/2025/05/07/part-1-what-is-ussd-and-why-does-it-matter-today.html"><![CDATA[<p><img src="/assets/images/part-1-banner.png" alt="Part1 banner image." /></p>
+
+<p><em>Build Your Own USSD App with Opensource Power</em></p>
+
+<p>In a world where mobile apps and high-speed internet dominate conversations about digital transformation, it’s easy to overlook a technology that continues to serve as a digital lifeline for millions - <strong>USSD (Unstructured Supplementary Service Data)</strong>. As a telecommunications VAS engineer in Papua New Guinea (PNG), I see firsthand how vital USSD still is to the majority of our population.</p>
+
+<p>Despite growing smartphone adoption, <strong>most of PNG’s population continue to use feature phones devices</strong> that don’t rely on apps, Wi-Fi, or 4G data. Even among smartphone users, access to affordable mobile data remains limited, especially outside major urban centers. This series will teach you to build USSD apps that transform lives, using open-source tools like Python and Django.</p>
+
+<h2 id="what-is-ussd">What is USSD?</h2>
+<p>Have you ever dialed something like *120# on your phone to check your airtime balance or *777# to buy a data bundle? That’s USSD in action!</p>
+
+<p>USSD stands for <strong>Unstructured Supplementary Service Data</strong>, sometimes called short codes/feature codes. It’s a simple, fast way to interact with your mobile network using short codes like *123#. Think of it as a text-based menu system that lets you access services directly on your phone—no internet or app required. Let’s break it down:</p>
+
+<ul>
+  <li><strong>Unstructured:</strong> USSD messages are plain text, sent back and forth in a free-form way. Unlike apps or websites with fixed formats, USSD is like texting simple commands to your network and getting instant replies.</li>
+  <li><strong>Supplementary:</strong> USSD is a built-in feature of your mobile network, just like making calls or sending SMS. It’s always there, ready to use, without needing extra software or data.</li>
+  <li><strong>Service Data:</strong> USSD lets you perform tasks like checking your account balance, topping up airtime, paying bills, transferring money, or subscribing to plans. You dial a code, navigate a menu, and get results in seconds.</li>
+</ul>
+
+<h2 id="how-does-ussd-work">How Does USSD Work?</h2>
+<p>When you dial a USSD code (e.g. *131#), your phone starts a <strong>real-time communication session</strong> with your mobile network. You’ll typically see a simple text menu pop up on your screen with options like:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Check Balance
+2. Buy Data
+3. Transfer Credit
+4. More Options
+</code></pre></div></div>
+<p>You respond by entering the number of your choice (e.g., 1), and the network immediately processes that input and sends back the next prompt or the requested information. This continues as a live session — similar to chatting in real time — but without needing the internet or any app.</p>
+
+<h2 id="behind-the-scenes-a-high-level-flow">Behind the Scenes: A High-Level Flow</h2>
+<p>Imagine a farmer in PNG dialing *525# to check their Kinabank account balance. Here’s how it works as shown in the diagram below</p>
+
+<p><img src="/assets/images/part-1-flow.png" alt="USSD flow diagram." /></p>
+
+<h3 id="explanation-of-the-flow">Explanation of the Flow:</h3>
+<ol>
+  <li><strong>You Dial the Code:</strong> The session begins when a user dials a USSD shortcode like *525#.</li>
+  <li><strong>Mobile Tower Relays:</strong> The request travels from the phone through the nearest GSM cell tower.</li>
+  <li><strong>Network Switch Routes:</strong> The Mobile Switching Center (MSC) acts as a traffic controller, forwarding the request to the USSD gateway.</li>
+  <li><strong>USSD Manager Handles:</strong> The USSD Gateway (USSDGW) manages the session, passing the request to your app (see USSDGW in the diagram).</li>
+  <li><strong>Your App Responds:</strong> Built with tools like Python and Django, your app processes the request—checking balances or generating menus—and sends a response (e.g., “Balance: K10”).</li>
+  <li><strong>User Continues:</strong> The farmer sees the response and can reply to keep the session going.</li>
+</ol>
+
+<p>This invisible back-and-forth happens in real time, and most users never realize the technical orchestration involved — they just enjoy a simple, fast experience.</p>
+
+<h2 id="why-ussd-still-matters-in-2025">Why USSD Still Matters in 2025</h2>
+<p>In PNG and developing countries, USSD remains a powerful tool for digital access and inclusion. Even in 2025, where apps and high-speed networks dominate, USSD bridges the gap for millions who lack internet or smartphones. Its benefits make it indispensable:</p>
+
+<ul>
+  <li><strong>No Internet Needed:</strong> Works with just a basic mobile signal, no Wi-Fi or mobile data required.</li>
+  <li><strong>Works on Any Phone:</strong> From the simplest button phone to the latest smartphones.</li>
+  <li><strong>Fast and Reliable:</strong> Delivers near-instant responses through the mobile network.</li>
+  <li><strong>Accessible to All:</strong> Simple to use, even for people with limited digital literacy.</li>
+</ul>
+
+<h2 id="how-ussd-is-used-in-png-today">How USSD Is Used in PNG Today</h2>
+<p>Currently, USSD powers essential services across PNG, connecting people to the digital world:</p>
+
+<ul>
+  <li>💳 <strong>Mobile Banking &amp; Wallets:</strong> Send money, check bank account balances, or pay bills with codes like *131# (BSP Mobile Banking) and 525# (KinaBank USSD). Digicel’s 888# (CellMoni) offers a mobile wallet for payments.</li>
+  <li>📶 <strong>Topping Up Credit:</strong> Top up airtime or buy data bundles with *777# or *675# (network-specific options), *120# (balance check), *121# (top-up service), *126# (please call me), *127# (request credits), and *128# (transfer credits). These codes keep users connected, especially where data plans are out of reach, showcasing USSD’s everyday value.</li>
+  <li>📡 <strong>Government Services:</strong> Services like GAPMIS (Government Agriculture Price &amp; Market Information Service, *16400#) let farmers check crop prices or market updates. Though underused due to low awareness, GAPMIS highlights USSD’s potential to deliver critical information—setting the stage for Part 2’s tips on better menu design.</li>
+</ul>
+
+<h2 id="untapped-potential-for-ussd-in-png">Untapped Potential for USSD in PNG</h2>
+<p>Beyond current uses, USSD has immense potential to expand digital inclusion, especially in remote areas with limited connectivity. Imagine these applications:</p>
+
+<ul>
+  <li>🏥 <strong>Healthcare Outreach:</strong> Send appointment reminders, track vaccinations, or share health tips in Tok Pisin (a widely spoken language in PNG) or other local languages. For example, a mother could dial *555# to confirm her child’s immunization schedule.</li>
+  <li>🎓 <strong>Education Access:</strong> Deliver short quizzes, school notices, or learning tips to students and parents. A student could dial *456# to receive a daily math problem.</li>
+  <li>📡 <strong>Additional Government Services:</strong> Enable citizens to register births, check National Identification (NID) status, or track passport applications via a USSD menu. For instance, *123# could guide users through a voter registration process.</li>
+  <li>📋 <strong>Community Surveys:</strong> Collect real-time feedback on public projects or disaster response. A village leader could dial *999# to report flooding impacts.</li>
+</ul>
+
+<h2 id="why-ussd-shines-in-2025">Why USSD Shines in 2025</h2>
+<p>In PNG, slow internet rollout, high smartphone costs, and reliance on basic phones keep USSD relevant. It’s a low-cost, scalable solution that works where apps and websites can’t. However, challenges like network outages or complex menus for less literate users highlight the need for thoughtful design.</p>
+
+<p>USSD isn’t just a technology—it’s a lifeline, connecting PNG’s people to banking, healthcare, education, and government services, no matter where they are. In 2025, it remains the unsung hero of digital inclusion, empowering communities reliably and affordably.</p>
+
+<h2 id="why-im-writing-this-series">Why I’m Writing This Series</h2>
+<p>As a Value-Added Services (VAS) Engineer working with USSD daily in Papua New Guinea, I’ve seen its transformative power—especially when services are designed with real users in mind, like farmers checking crop prices or parents accessing school updates. USSD isn’t just code; it’s a lifeline for communities with limited internet or smartphones.</p>
+
+<p>I’m writing this series: to demystify USSD and show developers, designers, product leads, and even policymakers how to build smart, user-friendly USSD services using open-source tools like Python, Django, and the ussd-airflow-engine (a USSD workflow library). You don’t need to be a telecom expert to start. This series will guide you step-by-step, from idea to deployment, with practical tips to create services that make a difference.</p>
+
+<h2 id="what-youll-learn-in-this-series">What You’ll Learn in This Series</h2>
+<p>This series is your hands-on guide to building USSD services that work for everyone, even on basic phones. HThis series is your hands-on guide to building USSD services that work for everyone, even on basic phones. Here’s what’s coming:</p>
+
+<ul>
+  <li><strong>Part 1: What is USSD and Why It Matters Today</strong> (you’re reading it now) – USSD’s role in digital inclusion.</li>
+  <li><strong>Part 2: Designing a Dynamic USSD Flow - Key Concepts</strong> – Learn to create interactive menus that adapt to user inputs, handle errors, and deliver seamless experience.</li>
+  <li><strong>Part 3: The Open-Source Stack</strong> – Explore tools like Python, Django, and ussd-airflow-engine to build robust USSD apps.</li>
+  <li><strong>Part 4: Building the App</strong> – Code a USSD service with session handling, menu navigation, and integration with APIs (e.g., for banking or weather data).</li>
+  <li><strong>Part 5: Deployment, Testing, and Scaling</strong> – Launch your app, test it with real users, and scale it for thousands of users.</li>
+</ul>
+
+<p>Each post is practical, clear, and focused on helping you build responsive USSD services that meet real-world needs, like helping a villager check their bank balance with *123#.</p>
+
+<h2 id="closing-thoughts">Closing Thoughts</h2>
+<p>USSD isn’t outdated—it’s <em>appropriate</em> tech for places like PNG where internet access and smartphones aren’t universal. It bridges the digital divide, connecting people to banking, education, healthcare, and public services through simple codes. But building great USSD services takes care—menus must be intuitive, and systems must handle diverse user inputs reliably.</p>
+
+<p>Whether you’re a developer eager to code, a designer crafting user experiences, a product lead shaping services, a policymaker exploring digital inclusion, or just curious about mobile tech, this series is for you. By the end, you’ll have the tools to create USSD apps that empower communities.</p>
+
+<p>How can a simple code like *16400# help a farmer check crop prices without internet? In Part 2, we’ll dive into designing dynamic USSD menus that adapt to users, handle mistakes, and work smoothly on any phone in Papua New Guinea. Don’t miss this step to building impactful apps!”</p>
+
+<p>Let’s build digital services that work for <em>everyone</em>—See you in Part 2!</p>]]></content><author><name>David Sikar</name></author><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Build Your Own USSD App with Opensource Power</title><link href="http://localhost:4000/2025/04/30/build-your-own-ussd-app-with-opensource-power.html" rel="alternate" type="text/html" title="Build Your Own USSD App with Opensource Power" /><published>2025-04-30T00:00:00+12:00</published><updated>2025-04-30T00:00:00+12:00</updated><id>http://localhost:4000/2025/04/30/build-your-own-ussd-app-with-opensource-power</id><content type="html" xml:base="http://localhost:4000/2025/04/30/build-your-own-ussd-app-with-opensource-power.html"><![CDATA[<p><img src="/assets/images/intro-post-banner.jpg" alt="Intro banner image." /></p>
+
+<p>Ever wondered how those *123# menus work on your phone?
+What if you could actually build one yourself?</p>
+
+<p><strong>USSD technology</strong> (Unstructured Supplementary Service Data) might seem old-school compared to mobile apps, but it remains crucial in regions where smartphone penetration and internet access are still growing — like Papua New Guinea and many other developing markets.
+In fact, USSD often leapfrogs traditional infrastructure, delivering essential services to millions through the most basic mobile phones.</p>
+
+<p>In this series of posts, I’ll share my hands-on journey building a dynamic USSD application using readily available open-source tools.
+Forget rigid, hardcoded menus — we’ll focus on flexible, dynamic menu retrieval and session management, the kind of approach that’s scalable, adaptable, and practical for real-world telco environments.</p>
+
+<p>Whether you’re a developer curious about USSD, a telecom enthusiast, or someone looking for actionable implementation tips, you’ll find something valuable here. Follow along — and by the end of this series, you could be well on your way to building your own USSD-powered services!</p>
+
+<p><strong>Here’s what you can expect in the series:</strong></p>
+
+<ul>
+  <li>
+    <p><strong>Part 1:</strong> What is USSD and Why It Matters Today</p>
+  </li>
+  <li>
+    <p><strong>Part 2:</strong> Designing a Dynamic USSD Flow – Key Concepts</p>
+  </li>
+  <li>
+    <p><strong>Part 3:</strong> Open Source Stack – Tools I’m Using (Python, Django, and more)</p>
+  </li>
+  <li>
+    <p><strong>Part 4:</strong> Building the App – Session Handling, Menus, and API Integration</p>
+  </li>
+  <li>
+    <p><strong>Part 5:</strong> Deploying, Testing, and Scaling for Production</p>
+  </li>
+</ul>
+
+<p>Get ready to unlock the true power of simple technology — and to build something that can reach millions.</p>]]></content><author><name>David Sikar</name></author><summary type="html"><![CDATA[]]></summary></entry></feed>

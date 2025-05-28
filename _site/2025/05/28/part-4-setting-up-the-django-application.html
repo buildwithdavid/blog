@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Part 4: Setting Up the Django Application | Build With David</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Part 4: Setting Up the Django Application" />
+<meta name="author" content="David Sikar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Build Your Own USSD APP with Opensource Power" />
+<meta property="og:description" content="Build Your Own USSD APP with Opensource Power" />
+<link rel="canonical" href="http://localhost:4000/2025/05/28/part-4-setting-up-the-django-application.html" />
+<meta property="og:url" content="http://localhost:4000/2025/05/28/part-4-setting-up-the-django-application.html" />
+<meta property="og:site_name" content="Build With David" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-05-28T00:00:00+12:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Part 4: Setting Up the Django Application" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"David Sikar"},"dateModified":"2025-05-28T00:00:00+12:00","datePublished":"2025-05-28T00:00:00+12:00","description":"Build Your Own USSD APP with Opensource Power","headline":"Part 4: Setting Up the Django Application","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/05/28/part-4-setting-up-the-django-application.html"},"url":"http://localhost:4000/2025/05/28/part-4-setting-up-the-django-application.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=4424a297e32c94302389c1c238543896419b789d">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'G-QLRBL8L1NP', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Build With David</a></h1>
+
+        
+
+        <p>I’m a Telecommunications Engineer and Python developer with 8+ years in VAS solutions, USSD/SMS apps, and systems integration. I build smart tools with Django, explore generative Al, and am currently diving into NLP to support low-resource languages in PNG. Passionate about tech that makes a difference.</p>
+
+        
+        <p class="view"><a href="https://github.com/buildwithdavid/blog">View the Project on GitHub <small>buildwithdavid/blog</small></a></p>
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small>28 May 2025</small>
+<h1>Part 4: Setting Up the Django Application</h1>
+
+<p class="view">by David Sikar</p>
+
+<p><img src="/assets/images/part-4-banner-v1.png" alt="Part4 banner image." />
+<em>Build Your Own USSD APP with Opensource Power</em></p>
+
+<p>Welcome to <strong>Part 4</strong> of our Build Your Own USSD App Series! If you’re new, Parts 1-3 covered the theory behind USSD applications, and now we’re diving into the fun stuff: coding our Dental Appointment USSD app. This guide is ideal for developers with basic Python knowledge. In Part 3, I skipped mentioning Django to focus on architecture, but today I’ll introduce this powerful framework before we start coding. Let’s bring our app to life!
+A Quick Intro to Django
+Django is a high-level Python web framework that simplifies rapid development with features like an admin panel and ORM (Object-Relational Mapping). It’s perfect for USSD apps due to its scalability and security. Learn more at Django’s official docs.</p>
+<h3 id="lets-dive-in-coding-our-ussd-app">Let’s Dive In: Coding Our USSD App</h3>
+<p>I’m using Ubuntu for this tutorial and will provide Ubuntu commands. Where commands differ for Windows, I’ll note them explicitly. We’ll break this into three sections:</p>
+
+<ol>
+  <li>Preparing the Django Application</li>
+  <li>Creating the USSD Journey File, Models, API View, URLs, and Utility Functions</li>
+  <li>Simulating the USSD Service</li>
+</ol>
+
+<h2 id="1-preparing-django-application">1. Preparing Django Application</h2>
+<p>Let’s set up our Django environment to ensure everything runs smoothly.</p>
+
+<ol>
+  <li>
+    <p><strong>Download the Starter Project</strong></p>
+
+    <p>Start by downloading the starter project from my GitHub: https://github.com/jayskar/dental_ussd.</p>
+
+    <ul>
+      <li><strong>Option A (With Git)</strong>: If you have Git installed (download from git-scm.com if needed), clone the repository:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  git clone https://github.com/jayskar/dental_ussd.git
+</code></pre></div>        </div>
+
+        <p><img src="/assets/images/p4-im01.png" alt="Part4  image 1." /></p>
+      </li>
+      <li><strong>Option B (Without Git)</strong>: Click the green “Code” button on GitHub, select “Download ZIP,” and extract using your preferred unzip tool (e.g., WinRAR or 7-Zip).</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Navigate to the Project Folder</strong></p>
+
+    <p>After cloning or extracting, navigate into the project directory:</p>
+    <pre><code class="language-plain"> cd dental_ussd
+</code></pre>
+  </li>
+  <li>
+    <p><strong>Create a Virtual Environment</strong></p>
+
+    <p>A virtual environment isolates dependencies to avoid conflicts with your system Python. Create one:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python3 <span class="nt">-m</span> venv venv
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Activate the Virtual Environment</strong></p>
+
+    <ul>
+      <li><strong>Linux/MacOS</strong>:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">source </span>venv/bin/activate
+</code></pre></div>        </div>
+      </li>
+      <li><strong>Windows</strong>:
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  venv\Scripts\activate
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Install Dependencies</strong></p>
+
+    <p>With the virtual environment active, install the required packages:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+</code></pre></div>    </div>
+
+    <p><em>Troubleshooting</em>: If you encounter errors, ensure <code class="language-plaintext highlighter-rouge">pip</code> is up-to-date ( <code class="language-plaintext highlighter-rouge">pip install --upgrade pip</code> ).</p>
+  </li>
+  <li>
+    <p><strong>Update configure.py for Compatibility</strong></p>
+
+    <p>We need to tweak a file in the virtual environment to ensure compatibility with our app’s dependencies. Locate <code class="language-plaintext highlighter-rouge">configure.py</code> inside your virtual environment (e.g., <code class="language-plaintext highlighter-rouge">venv/lib/python3.x/site-packages/</code>). Update the following lines:</p>
+
+    <ul>
+      <li><strong>Replace</strong>:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getargspec</span>
+</code></pre></div>        </div>
+
+        <p><strong>With</strong>:</p>
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">argspec</span> <span class="k">as</span> <span class="n">getargspec</span>
+</code></pre></div>        </div>
+      </li>
+      <li><strong>Replace</strong>:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Mapping</span>
+</code></pre></div>        </div>
+
+        <p><strong>With</strong>:</p>
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Mapping</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+
+    <p>Save and exit. This ensures compatibility with older Python versions.</p>
+
+    <p><img src="/assets/images/part-4-configure-update.png" alt="Part4 configure update." /></p>
+  </li>
+  <li>
+    <p><strong>Run Django Migrations</strong></p>
+
+    <p>Apply the initial database setup:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py makemigrations
+python manage.py migrate
+</code></pre></div>    </div>
+
+    <p><em>Troubleshooting</em>: If makemigrations fails, check for syntax errors in your models (we’ll define them later).</p>
+  </li>
+  <li>
+    <p><strong>Create an Admin User</strong></p>
+
+    <p>Set up an admin user to access Django’s admin panel:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py createsuperuser
+</code></pre></div>    </div>
+
+    <p>Follow the prompts to enter a username, email, and password.</p>
+
+    <p><img src="/assets/images/part-4-createsuperuser.png" alt="Part4 createsuperuser." /></p>
+  </li>
+  <li>
+    <p><strong>Test the Django App</strong></p>
+
+    <p>Launch the Django development server:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py runserver
+</code></pre></div>    </div>
+
+    <p><img src="/assets/images/part-4-runserver.png" alt="Part4 runserver." /></p>
+
+    <p>Open your browser and visit <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000</code>. You should see Django’s welcome page.</p>
+
+    <p><img src="/assets/images/part-4-welcomepage.png" alt="Part4 welcomepage." /></p>
+
+    <p><em>Troubleshooting</em>: If the server doesn’t start, ensure port 8000 is free (<code class="language-plaintext highlighter-rouge">lsof -i :8000</code> on Linux, or use <code class="language-plaintext highlighter-rouge">python manage.py runserver 8001</code>).</p>
+  </li>
+  <li>
+    <p><strong>Access the Admin Site</strong></p>
+
+    <p>Visit <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000/admin</code> and log in with the credentials from Step 8. You’ll see Django’s admin dashboard.</p>
+
+    <p><img src="/assets/images/part-4-djangoadmin.png" alt="Part4 djangoadmin." /></p>
+  </li>
+</ol>
+
+<p><strong>Summary</strong>: Your Django app is now set up! Let’s build the USSD logic next.</p>
+
+<h2 id="2-creating-the-ussd-journey-file-models-api-view-urls-and-utility-functions">2. Creating the USSD Journey File, Models, API View, URLs, and Utility Functions</h2>
+<p>Now that Django is ready, let’s build the core components of our USSD app.</p>
+<h3 id="database-schema-overview">Database Schema Overview</h3>
+
+<p><img src="/assets/images/part-4-db-schema.png" alt="Part4 db-schema." />
+Our app needs three models:</p>
+
+<ul>
+  <li><strong>Patient</strong>: Stores name and phone number.</li>
+  <li><strong>Appointment</strong>: Tracks patient appointments.</li>
+  <li><strong>ClinicAvailability</strong>: Manages available slots per service (appointment_type).</li>
+</ul>
+
+<h3 id="steps-to-build-the-ussd-app">Steps to Build the USSD App</h3>
+
+<ol>
+  <li>
+    <p><strong>Define Models</strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/models.py</code>, define the models to organize our data. Here’s a sample:</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># dental_ussd/models.py
+</span> <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+ <span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="kn">import</span> <span class="n">MinValueValidator</span>
+
+ <span class="k">class</span> <span class="nc">Patient</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+     <span class="n">mobile_number</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">created_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+     <span class="n">updated_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">return</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s"> (</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">mobile_number</span><span class="si">}</span><span class="s">)"</span>
+
+
+ <span class="k">class</span> <span class="nc">Appointment</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+     <span class="n">patient</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Patient</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="p">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">appointment_type</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">clinic_location</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">appointment_date</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span>
+         <span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+         <span class="n">default</span><span class="o">=</span><span class="s">'scheduled'</span><span class="p">,</span>
+         <span class="n">choices</span><span class="o">=</span><span class="p">[(</span><span class="s">'scheduled'</span><span class="p">,</span> <span class="s">'Scheduled'</span><span class="p">),</span> <span class="p">(</span><span class="s">'done'</span><span class="p">,</span> <span class="s">'Done'</span><span class="p">),</span> <span class="p">(</span><span class="s">'cancelled'</span><span class="p">,</span> <span class="s">'Cancelled'</span><span class="p">)]</span>
+     <span class="p">)</span>
+     <span class="n">created_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+     <span class="n">updated_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+         <span class="s">"""Return a string representation of the appointment."""</span>
+         <span class="k">return</span> <span class="sa">f</span><span class="s">"""
+         Type: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">appointment_type</span><span class="si">}</span><span class="s">
+         Location: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">clinic_location</span><span class="si">}</span><span class="s">
+         Date: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">appointment_date</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d %I</span><span class="si">:</span><span class="o">%</span><span class="n">M</span><span class="o">%</span><span class="n">p</span><span class="s">')</span><span class="si">}</span><span class="s">
+         Status: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">status</span><span class="si">}</span><span class="s">"""</span>
+
+
+ <span class="k">class</span> <span class="nc">ClinicAvailability</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+     <span class="n">clinic_location</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">appointment_type</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span>
+         <span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+         <span class="n">default</span><span class="o">=</span><span class="s">'checkup'</span><span class="p">,</span>
+         <span class="n">choices</span><span class="o">=</span><span class="p">[(</span><span class="s">'Checkup'</span><span class="p">,</span> <span class="s">'Checkup'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Cleaning'</span><span class="p">,</span> <span class="s">'Cleaning'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Filling'</span><span class="p">,</span> <span class="s">'Filling'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Extraction'</span><span class="p">,</span> <span class="s">'Extraction'</span><span class="p">)]</span>
+     <span class="p">)</span>
+     <span class="n">available_slots</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">MinValueValidator</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span>
+     <span class="n">appointment_date</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+     <span class="n">updated_at</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+         <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
+             <span class="n">models</span><span class="p">.</span><span class="n">CheckConstraint</span><span class="p">(</span>
+                 <span class="n">check</span><span class="o">=</span><span class="n">models</span><span class="p">.</span><span class="n">Q</span><span class="p">(</span><span class="n">available_slots__gte</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s">'available_slots_non_negative'</span><span class="p">)</span>
+         <span class="p">]</span>
+
+     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">return</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">appointment_type</span><span class="si">}</span><span class="s"> at </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">clinic_location</span><span class="si">}</span><span class="s"> on </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">appointment_date</span><span class="si">}</span><span class="s">"</span>
+</code></pre></div>    </div>
+
+    <p><code class="language-plaintext highlighter-rouge">models.py</code> code here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/models.py" target="_blank">dental_ussd/models.py</a>.</p>
+  </li>
+  <li>
+    <p><strong>Register Models in Admin</strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/admin.py</code>, add the models to the admin panel:</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># dental_ussd/admin.py
+</span> <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+ <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Patient</span><span class="p">,</span> <span class="n">Appointment</span><span class="p">,</span> <span class="n">ClinicAvailability</span>
+
+ <span class="o">@</span><span class="n">admin</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">Patient</span><span class="p">)</span>
+ <span class="k">class</span> <span class="nc">PatientAdmin</span><span class="p">(</span><span class="n">admin</span><span class="p">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">'name'</span><span class="p">,</span> <span class="s">'mobile_number'</span><span class="p">,</span> <span class="s">'created_at'</span><span class="p">,</span> <span class="s">'updated_at'</span><span class="p">)</span>
+
+ <span class="o">@</span><span class="n">admin</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">Appointment</span><span class="p">)</span>
+ <span class="k">class</span> <span class="nc">AppointmentAdmin</span><span class="p">(</span><span class="n">admin</span><span class="p">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">'patient'</span><span class="p">,</span> <span class="s">'appointment_type'</span><span class="p">,</span> <span class="s">'clinic_location'</span><span class="p">,</span> <span class="s">'appointment_date'</span><span class="p">,</span> <span class="s">'status'</span><span class="p">)</span>
+
+
+ <span class="o">@</span><span class="n">admin</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">ClinicAvailability</span><span class="p">)</span>
+ <span class="k">class</span> <span class="nc">ClinicAvailibilityAdmin</span><span class="p">(</span><span class="n">admin</span><span class="p">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">'clinic_location'</span><span class="p">,</span> <span class="s">'appointment_type'</span><span class="p">,</span> <span class="s">'available_slots'</span><span class="p">,</span> <span class="s">'appointment_date'</span><span class="p">,</span> <span class="s">'updated_at'</span><span class="p">)</span>
+</code></pre></div>    </div>
+
+    <p><code class="language-plaintext highlighter-rouge">admin.py</code> code here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/admin.py" target="_blank">dental_ussd/admin.py</a></p>
+  </li>
+  <li>
+    <p><strong>Add App to <code class="language-plaintext highlighter-rouge">INSTALLED_APPS</code></strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_app/settings.py</code>, ensure <code class="language-plaintext highlighter-rouge">dental_ussd</code> is in <code class="language-plaintext highlighter-rouge">INSTALLED_APPS</code>:</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+     <span class="p">...</span>
+     <span class="s">'dental_ussd'</span><span class="p">,</span>
+ <span class="p">]</span>
+</code></pre></div>    </div>
+    <p><img src="/assets/images/part-4-installed-apps.png" alt="Part4 installedapps." /></p>
+  </li>
+  <li>
+    <p><strong>Run Migrations Again</strong></p>
+
+    <p>Update the database with the new models:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python manage.py makemigrations
+ python manage.py migrate
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Verify Models in Admin</strong></p>
+
+    <p>Launch the server:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python manage.py runserver
+</code></pre></div>    </div>
+
+    <p>Visit <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000/admin</code>, log in, and confirm you see the <code class="language-plaintext highlighter-rouge">DENTAL_USSD</code> app with the <code class="language-plaintext highlighter-rouge">Patient</code>, <code class="language-plaintext highlighter-rouge">ClinicAvailability</code>, and <code class="language-plaintext highlighter-rouge">Appointment</code> models.</p>
+
+    <p><img src="/assets/images/part-4-admin-dental-ussd.png" alt="Part4 admin-dental-ussd." /></p>
+  </li>
+  <li>
+    <p><strong>Load Sample Data</strong></p>
+
+    <p>Add sample data to ClinicAvailability:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python manage.py loaddata fixtures/sample_data.json
+</code></pre></div>    </div>
+    <p><img src="/assets/images/part-4-loaddata.png" alt="Part4 loaddata." /></p>
+
+    <p>Check the admin portal (<code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000/admin</code>) under <code class="language-plaintext highlighter-rouge">ClinicAvailability</code> to see the data.</p>
+
+    <p><img src="/assets/images/part-4-sample-data.png" alt="Part4 sampledata." /></p>
+
+    <p><em>Note</em>: For this tutorial, I have used above approach to load sample data to the database, however feel free to manually insert some data to the <code class="language-plaintext highlighter-rouge">ClinicAvilibility</code> model via the django admin.</p>
+  </li>
+  <li>
+    <p><strong>Create the API View</strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/views.py</code>, define the view to handle USSD requests. A simplified example:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kn">import</span> <span class="nn">os</span>
+ <span class="kn">import</span> <span class="nn">yaml</span>
+
+ <span class="c1"># Additional imported libraries
+</span>
+ <span class="k">class</span> <span class="nc">CustomUssdRequest</span><span class="p">(</span><span class="n">UssdRequest</span><span class="p">):</span>
+     <span class="c1"># This class extends the base UssdRequest to handle USSD screen 
+</span>     <span class="c1"># content from YAML files.
+</span>
+     <span class="k">def</span> <span class="nf">get_screens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+         <span class="c1"># Loads screen content from YAML journey files. It finds the specified 
+</span>         <span class="c1"># screen using the screen name and returns its content. If the file or 
+</span>         <span class="c1"># screen doesn't exist, it raises appropriate errors.
+</span>
+ <span class="o">@</span><span class="n">method_decorator</span><span class="p">(</span><span class="n">csrf_exempt</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'dispatch'</span><span class="p">)</span>  <span class="c1"># Exempt this view from CSRF verification
+</span> <span class="k">class</span> <span class="nc">DentalAppUssdGateway</span><span class="p">(</span><span class="n">APIView</span><span class="p">):</span>
+     <span class="k">def</span> <span class="nf">add_cors_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+         <span class="c1"># helper function to allow simulator to communicate with 
+</span>
+     <span class="k">def</span> <span class="nf">options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+         <span class="c1"># This function handles what's called "preflight checks" - 
+</span>         <span class="c1"># before making post request,
+</span>
+     <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+         <span class="c1"># The main method that processes incoming USSD requests:
+</span>
+         <span class="c1"># Extracts the user's input from the request
+</span>         <span class="c1"># Creates a CustomUssdRequest with the user's phone number and input
+</span>         <span class="c1"># Processes the request through the UssdEngine
+</span>         <span class="c1"># Returns a formatted response
+</span>         <span class="c1"># note: full code ommited for breivity, please refer to github for full code
+</span>
+         <span class="n">ussd_request</span> <span class="o">=</span> <span class="n">CustomUssdRequest</span><span class="p">(</span>
+             <span class="n">phone_number</span><span class="o">=</span><span class="n">request</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="s">'phoneNumber'</span><span class="p">].</span><span class="n">strip</span><span class="p">(</span><span class="s">'+'</span><span class="p">),</span>
+             <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
+             <span class="n">ussd_input</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+             <span class="n">service_code</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="s">'serviceCode'</span><span class="p">],</span>
+             <span class="n">language</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'language'</span><span class="p">,</span> <span class="s">'en'</span><span class="p">),</span>
+             <span class="n">use_built_in_session_management</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">journey_name</span> <span class="o">=</span> <span class="s">"simple_patient_journey"</span>
+         <span class="p">)</span>
+
+         <span class="c1"># Process the USSD request using the USSD engine
+</span>         <span class="n">ussd_engine</span> <span class="o">=</span> <span class="n">UssdEngine</span><span class="p">(</span><span class="n">ussd_request</span><span class="p">)</span>
+         <span class="n">ussd_response</span> <span class="o">=</span> <span class="n">ussd_engine</span><span class="p">.</span><span class="n">ussd_dispatcher</span><span class="p">()</span>
+         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">ussd_response_handler</span><span class="p">(</span><span class="n">ussd_response</span><span class="p">)</span>
+
+         <span class="bp">self</span><span class="p">.</span><span class="n">add_cors_headers</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+         <span class="k">return</span> <span class="n">response</span>
+
+     <span class="k">def</span> <span class="nf">ussd_response_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ussd_response</span><span class="p">):</span>
+         <span class="c1"># Formats the USSD engine's response into the required format with:
+</span>
+         <span class="c1"># A success status
+</span>         <span class="c1"># The message content
+</span>         <span class="c1"># The message type (CON for continuing sessions, END for ending sessions)
+</span></code></pre></div>    </div>
+
+    <p><code class="language-plaintext highlighter-rouge">views.py</code> code here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/views.py" target="_blank">dental_ussd/views.py</a></p>
+  </li>
+  <li>
+    <p><strong>Set Up URLs</strong></p>
+
+    <ul>
+      <li>
+        <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/urls.py</code>, add:</p>
+
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># dental_ussd/urls.py
+</span><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+
+<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">DentalAppUssdGateway</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">"dental_ussd_gw/"</span><span class="p">,</span> <span class="n">DentalAppUssdGateway</span><span class="p">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s">"dental_ussd_gw"</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre></div>        </div>
+
+        <p>Code: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/urls.py" target="_blank">dental_ussd/urls.py</a></p>
+      </li>
+      <li>
+        <p>In <code class="language-plaintext highlighter-rouge">dental_app/urls.py</code>, include the app’s URLs:</p>
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">include</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">'admin/'</span><span class="p">,</span> <span class="n">admin</span><span class="p">.</span><span class="n">site</span><span class="p">.</span><span class="n">urls</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">'dental_ussd/'</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">'dental_ussd.urls'</span><span class="p">)),</span>
+<span class="p">]</span>
+</code></pre></div>        </div>
+
+        <p>Code: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_app/urls.py" target="_blank">dental_app/urls.py</a></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Define the USSD Journey File (YAML)</strong>*</p>
+
+    <p>The USSD journey defines the interactive menu flow. First, let’s visualize it:
+<img src="/assets/images/flow-2.png" alt="Part4  ussd journey flow." />
+Now, here’s the YAML representation of that flow, saved as <code class="language-plaintext highlighter-rouge">dental_appointment_menu.yml</code> in the <code class="language-plaintext highlighter-rouge">journeys</code> directory:</p>
+
+    <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Initial Screen</span>
+<span class="na">initial_screen</span><span class="pi">:</span> <span class="s">authenticate_user</span>
+
+<span class="c1"># Authentication</span>
+<span class="na">authenticate_user</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">function_screen</span>
+<span class="na">function</span><span class="pi">:</span> <span class="s">dental_ussd.utils.authenticate_user</span>
+<span class="na">session_key</span><span class="pi">:</span> <span class="s">patient</span>
+<span class="na">next_screen</span><span class="pi">:</span> <span class="s">router_1</span>
+
+<span class="na">router_1</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">router_screen</span>
+<span class="na">default_next_screen</span><span class="pi">:</span> <span class="s">authenticated_menu</span>
+<span class="na">router_options</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">expression</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{</span><span class="nv"> </span><span class="s">{</span><span class="nv"> </span><span class="s">patient</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">None</span><span class="nv"> </span><span class="s">}</span><span class="nv"> </span><span class="s">}"</span>
+    <span class="na">next_screen</span><span class="pi">:</span> <span class="s">non_authenticated_menu</span>
+
+<span class="c1"># Non Authenticated Menu</span>
+<span class="na">non_authenticated_menu</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">menu_screen</span>
+<span class="na">text</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">Welcome! No Profile found.</span>
+<span class="na">options</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Register (Enter Name)</span>
+    <span class="na">next_screen</span><span class="pi">:</span> <span class="s">enter_name</span>
+    <span class="pi">-</span> <span class="na">text</span><span class="pi">:</span> <span class="s">Exit</span>
+    <span class="na">next_screen</span><span class="pi">:</span> <span class="s">end</span>
+        
+<span class="na">enter_name</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">input_screen</span>
+<span class="na">text</span><span class="pi">:</span> <span class="s">Enter Full Name</span>
+<span class="na">input_identifier</span><span class="pi">:</span> <span class="s">patient_name</span>
+<span class="na">next_screen</span><span class="pi">:</span> <span class="s">register_user</span>
+
+<span class="na">register_user</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">function_screen</span>
+<span class="na">function</span><span class="pi">:</span> <span class="s">dental_ussd.utils.register_user</span>
+<span class="na">session_key</span><span class="pi">:</span> <span class="s">is_registered</span>
+<span class="na">next_screen</span><span class="pi">:</span> <span class="s">register_confirmation</span>
+
+<span class="c1"># Additional nodes excluded</span>
+<span class="c1">#</span>
+
+<span class="na">end</span><span class="pi">:</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">quit_screen</span>
+<span class="na">text</span><span class="pi">:</span> <span class="s">Thank you for using our service. Goodbye!</span>
+
+</code></pre></div>    </div>
+    <p>Full <code class="language-plaintext highlighter-rouge">dental_appointment_menu.yml</code> here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/journeys/dental_appointment_menu.yml" target="_blank">journeys/dental_appointment_menu.yml</a></p>
+
+    <p>Update <code class="language-plaintext highlighter-rouge">dental_app/settings.py</code> to use this file:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DEFAULT_USSD_SCREEN_JOURNEY</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">'journeys'</span><span class="p">,</span> <span class="s">'dental_appointment_menu.yml'</span><span class="p">)</span>
+</code></pre></div>    </div>
+    <p><img src="/assets/images/part-4-journey-update.png" alt="Part4 journey-update." /></p>
+  </li>
+  <li>
+    <p><strong>Add Utility Functions</strong></p>
+
+    <p>In <code class="language-plaintext highlighter-rouge">dental_ussd/utils.py</code>, add helper functions (you may have to create if it doesn’t exist):</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span><span class="n">ussd_request</span><span class="p">):</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">phone_number</span> <span class="o">=</span> <span class="n">ussd_request</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'phone_number'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">phone_number</span><span class="p">)</span>
+    <span class="n">patient_reg</span> <span class="o">=</span> <span class="n">get_or_none</span><span class="p">(</span><span class="n">Patient</span><span class="p">,</span> <span class="n">mobile_number</span><span class="o">=</span><span class="n">phone_number</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">patient_reg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">patient_reg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">patient_reg</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"[*] resp=</span><span class="si">{</span><span class="n">resp</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resp</span>
+
+<span class="k">def</span> <span class="nf">register_user</span><span class="p">(</span><span class="n">ussd_request</span><span class="p">):</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">patient_name</span> <span class="o">=</span> <span class="n">ussd_request</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'patient_name'</span><span class="p">)</span>
+    <span class="n">phone_number</span> <span class="o">=</span> <span class="n">ussd_request</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'phone_number'</span><span class="p">)</span>
+    <span class="n">patient</span> <span class="o">=</span> <span class="n">Patient</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">mobile_number</span><span class="o">=</span><span class="n">phone_number</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">patient_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">patient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">patient</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="s">"Patient already registered"</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"[*] resp=</span><span class="si">{</span><span class="n">resp</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resp</span>
+</code></pre></div>    </div>
+
+    <p>Full utils here: <a href="https://github.com/jayskar/dental_ussd/blob/code-part-4/dental_ussd/utils.py" target="_blank">dental_app/dental_ussd/utils.py</a>.</p>
+  </li>
+  <li>
+    <p>Generate an Authentication TokenIn the admin panel (<code class="language-plaintext highlighter-rouge">http://127.0.0.1:8000/admin</code>), go to <code class="language-plaintext highlighter-rouge">Tokens</code> (under <code class="language-plaintext highlighter-rouge">Authtoken</code>), click <code class="language-plaintext highlighter-rouge">Add Token</code>, select your user, and save. Copy the generated token (e.g., <code class="language-plaintext highlighter-rouge">05866ced4ed0900591a002cb9ef196b3eed2490a</code>).</p>
+
+    <p><img src="/assets/images/part-4-auth-token.png" alt="Part4 auth-token." /></p>
+
+    <p><strong>Summary</strong>: We’ve built the core USSD app components! Let’s test it next.</p>
+  </li>
+</ol>
+
+<h2 id="3-simulating-the-ussd-service">3. Simulating the USSD Service</h2>
+<p>Let’s simulate our USSD app using a custom simulator.</p>
+
+<ol>
+  <li>
+    <p><strong>Download the Simulator</strong></p>
+
+    <p>Clone my forked simulator repo:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/jayskar/ussd-simulator.git
+</code></pre></div>    </div>
+
+    <p>Navigate to the ussd-mock directory:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>ussd-simulator/ussd-mock
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Set Up the Simulator</strong></p>
+
+    <ul>
+      <li><strong>Install Node.js if needed (nodejs.org)</strong>.</li>
+      <li>
+        <p><strong>Install dependencies</strong>:</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  npm <span class="nb">install</span>
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><strong>Edit the <code class="language-plaintext highlighter-rouge">.env</code> file in <code class="language-plaintext highlighter-rouge">ussd-mock/</code></strong>:</p>
+
+        <p>Replace <code class="language-plaintext highlighter-rouge">&lt;YOUR_API_TOKEN&gt;</code> with your token:</p>
+        <pre><code class="language-plain">  VUE_APP_AUTH_TOKEN=Token 05866ced4ed0900591a002cb9ef196b3eed2490a
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Launch the Simulator</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run serve
+</code></pre></div>    </div>
+
+    <p>Once compiled, visit http://localhost:8081 in your browser. You’ll see a test phone interface.</p>
+
+    <p><img src="/assets/images/part-4-phone-simulator.png" alt="Part4 simulator interface." /></p>
+  </li>
+  <li>
+    <p><strong>Configure CORS in Django</strong></p>
+
+    <p>To allow the simulator to communicate with Django, update <code class="language-plaintext highlighter-rouge">dental_app/settings.py</code>:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CORS_ALLOWED_ORIGINS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'http://localhost:8081'</span><span class="p">]</span> <span class="c1"># Change port if your simulator is running on a different port
+</span><span class="n">CORS_ALLOW_METHODS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">]</span>
+<span class="n">CORS_ALLOW_HEADERS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Authorization'</span><span class="p">,</span> <span class="s">'Content-Type'</span><span class="p">]</span>
+<span class="n">CORS_ALLOW_CREDENTIALS</span> <span class="o">=</span> <span class="bp">True</span>
+</code></pre></div>    </div>
+
+    <p><em>Note</em>: Ensure <code class="language-plaintext highlighter-rouge">django-cors-headers</code> is installed (<code class="language-plaintext highlighter-rouge">pip install django-cors-headers</code>) and added to <code class="language-plaintext highlighter-rouge">INSTALLED_APPS</code>.</p>
+  </li>
+  <li>
+    <p><strong>Run Django Server</strong></p>
+
+    <p>In the Django project directory:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py runserver
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Test with Simulator</strong></p>
+
+    <p>In the simulator (http://localhost:8081), click the phone icon to open the dial pad.<br />
+Click the call button. You should see the following:<br />
+<img src="/assets/images/part-4-simulator-dental-menu.png" alt="Part4 auth-token." /></p>
+
+    <p>If you get a prompt <code class="language-plaintext highlighter-rouge">Welcome to the Dental Appointment Service</code>, check if you have updated USSD Journey File n <code class="language-plaintext highlighter-rouge">dental_app/settings.py</code>, ensure the journey file path is set (refer to above 2.9):</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DEFAULT_USSD_SCREEN_JOURNEY</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">'journeys'</span><span class="p">,</span> <span class="s">'dental_appointment_menu.yml'</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Test the USSD Service</strong></p>
+
+    <ul>
+      <li>In the simulator (http://localhost:8081), you can change phone number to any number you choose.</li>
+      <li>Dial <code class="language-plaintext highlighter-rouge">*123#</code> into the phone then click call button.</li>
+      <li>Navigate through the menu to book appointments.</li>
+    </ul>
+
+    <p><em>Troubleshooting</em>: If it fails, verify the token, CORS settings, and journey file path.</p>
+  </li>
+</ol>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>Congratulations! You’ve built and tested a Dental Appointment USSD app using Django. Join the discussion on GitHub Issues and share your feedback. In Part 5, we’ll focus on making the app production-ready with best practices, then move into deployment, and finally touch on scaling for production to handle real-world demand. Happy coding!</p>
+
+
+
+  <small>tags: <em></em></small>
+
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="https://github.com/buildwithdavid">buildwithdavid</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+  </body>
+</html>
