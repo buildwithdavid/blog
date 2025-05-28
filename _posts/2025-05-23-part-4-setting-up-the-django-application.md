@@ -6,8 +6,10 @@ date: 2025-05-28
 *Build Your Own USSD APP with Opensource Power*
 
 Welcome to **Part 4** of our Build Your Own USSD App Series! If you’re new, Parts 1-3 covered the theory behind USSD applications, and now we’re diving into the fun stuff: coding our Dental Appointment USSD app. This guide is ideal for developers with basic Python knowledge. In Part 3, I skipped mentioning Django to focus on architecture, but today I’ll introduce this powerful framework before we start coding. Let’s bring our app to life!
-A Quick Intro to Django
+#### A Quick Intro to Django
+
 Django is a high-level Python web framework that simplifies rapid development with features like an admin panel and ORM (Object-Relational Mapping). It’s perfect for USSD apps due to its scalability and security. Learn more at Django’s official docs.
+
 ### Let’s Dive In: Coding Our USSD App
 I’m using Ubuntu for this tutorial and will provide Ubuntu commands. Where commands differ for Windows, I’ll note them explicitly. We’ll break this into three sections:
 
